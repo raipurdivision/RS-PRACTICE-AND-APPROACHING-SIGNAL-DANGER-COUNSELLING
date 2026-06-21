@@ -1,0 +1,893 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Railway Board Drive - Counselling Form</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #000000;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 2px solid #003366;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .header {
+    background: #003366;
+    color: #fff;
+    text-align: center;
+    padding: 18px 10px;
+  }
+  .header h1 {
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: 1px;
+  }
+  .header h2 {
+    margin: 6px 0 0;
+    font-size: 15px;
+    font-weight: bold;
+    color: #FFD700;
+  }
+  .header h3 {
+    margin: 4px 0 0;
+    font-size: 14px;
+    font-weight: bold;
+    color: #FFD700;
+  }
+  form {
+    padding: 20px 30px 30px;
+  }
+  .section-title {
+    background: #e6eef5;
+    color: #003366;
+    font-weight: bold;
+    padding: 10px 14px;
+    margin: 25px 0 15px;
+    border-left: 5px solid #003366;
+    font-size: 16px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 25px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #222;
+    font-size: 14px;
+  }
+  input, select, textarea {
+    padding: 8px 10px;
+    border: 1px solid #b0b8c1;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #d3d3d3;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #003366;
+    box-shadow: 0 0 4px rgba(0,51,102,0.3);
+  }
+  .full-width {
+    grid-column: 1 / -1;
+  }
+  .autocomplete-wrapper {
+    position: relative;
+  }
+  .autocomplete-wrapper input {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #fff;
+  }
+  .autocomplete-wrapper input:disabled {
+    background-color: #e9ecef;
+    color: #777;
+    cursor: not-allowed;
+  }
+  .autocomplete-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #b0b8c1;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    z-index: 50;
+  }
+  .autocomplete-item {
+    padding: 8px 10px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .autocomplete-item:hover,
+  .autocomplete-item.active {
+    background: #e6eef5;
+    color: #003366;
+  }
+  .submit-row {
+    text-align: center;
+    margin-top: 30px;
+  }
+  button {
+    background: #003366;
+    color: #fff;
+    border: none;
+    padding: 12px 40px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #00509e;
+  }
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>RAILWAY BOARD DRIVE</h1>
+    <h2>APPROACHING DANGER SIGNAL COUNSELLING / RS APPLICATION PRACTICE</h2>
+    <h3>RAIPUR DIVISION</h3>
+  </div>
+
+  <form id="rbdForm">
+
+    <div class="form-group full-width" style="margin-bottom:10px;">
+      <label for="section_selector">Select Drive</label>
+      <select id="section_selector" name="section_selector">
+        <option value="">-- Select --</option>
+        <option value="danger">APPROACHING DANGER SIGNAL COUNSELLING</option>
+        <option value="rs">RS APPLICATION PRACTICE</option>
+      </select>
+    </div>
+
+    <!-- SECTION 1: DANGER SIGNAL APPROACHING COUNSELLING -->
+    <div id="dangerSection">
+    <div class="section-title">1. DANGER SIGNAL APPROACHING COUNSELLING</div>
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label for="ds_date">Date</label>
+        <input type="date" id="ds_date" name="ds_date">
+      </div>
+
+      <div class="form-group">
+        <label for="ds_place">Place</label>
+        <select id="ds_place" name="ds_place">
+          <option value="">-- Select Place --</option>
+          <option value="Lobby">Lobby</option>
+          <option value="Section">Section</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="ds_lobby_group">
+        <label for="ds_lobby">Select Lobby</label>
+        <select id="ds_lobby" name="ds_lobby">
+          <option value="">-- Select Lobby --</option>
+          <option value="DBEC">DBEC</option>
+          <option value="DURG">DURG</option>
+          <option value="RAIPUR">RAIPUR</option>
+          <option value="BYT">BYT</option>
+          <option value="DRZ">DRZ</option>
+          <option value="RSD">RSD</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="ds_cli_name">CLI Name</label>
+        <select id="ds_cli_name" name="ds_cli_name">
+          <option value="">-- Select CLI Name --</option>
+          <option value="A K REDDY/CLI/BIA">A K REDDY/CLI/R</option>
+<option value="A.R.TARAM/CLI/BIA">A.R. TARAM/CLI/BIA</option>
+<option value="ABDUL MOIN KHAN/CLI/BIA">ABDUL MOIN KHAN/CLI/BIA</option>
+<option value="AKHILESH KUMAR/CLI/BIA">AKHILESH KUMAR/CLI/BIA</option>
+<option value="AMIT KUMAR BANKURE/CLI/BYT">AMIT KUMAR BANKURE/CLI/BYT</option>
+<option value="ANANT PRAKASH SHRIVASTAVA/CLI/BIA">ANANT PRAKASH SHRIVASTAVA/CLI/BIA</option>
+<option value="ANIL KUMAR/CLI/BIA">ANIL KUMAR/CLI/BIA</option>
+<option value="ANKIT RAM KANT/CLI/BIA">ANKIT RAM KANT/CLI/BIA</option>
+<option value="AVON KUMAR SAHU/CLI/R">AVON KUMAR SAHU/CLI/R</option>
+<option value="ASHISH WANJARI/CLI/BYT">ASHISH WANJARI/CLI/BYT</option>
+<option value="B B KUSHWAHA/CLI/BIA">B B KUSHWAHA/CLI/BIA</option>
+<option value="B K HARMUKH/CLI/BIA">B K HARMUKH/CLI/BIA</option>
+<option value="B. K. SAHA/CLI/BIA">B. K. SAHA/CLI/BIA</option>
+<option value="B.K.SONI/CLI/BIA">B.K.SONI/CLI/BIA</option>
+<option value="BHARAT SINGH ATBHAIYYA/CLI/R">BHARAT SINGH ATBHAIYYA/CLI/R</option>
+<option value="BHOLI CHAUDHARY/CLI/R">BHOLI CHAUDHARY/CLI/R</option>
+<option value="BIKRAMJIT KANRAR/CLI/BIA">BIKRAMJIT KANRAR/CLI/BIA</option>
+<option value="BINOD KUMAR RAM/CLI/R">BINOD KUMAR RAM/CLI/R</option>
+<option value="CLI NAME/CLI/BIA">CLI NAME/CLI/BIA</option>
+<option value="DEEPANNITA PUNTAMBEKAR/CLI/BIA">DEEPANNITA PUNTAMBEKAR/CLI/BIA</option>
+<option value="DILLI RAO/CLI/BYT">DILLI RAO/CLI/BYT</option>
+<option value="G. C. BISWAS/CLI/R">G. C. BISWAS/CLI/R</option>
+<option value="G. V. R. K. MADHU/CLI/BIA">G. V. R. K. MADHU/CLI/BIA</option>
+<option value="GIRDHARI LAL/CLI/R">GIRDHARI LAL/CLI/R</option>
+<option value="JAISHANKAR SHARMA/CLI/BIA">JAISHANKAR SHARMA/CLI/BIA</option>
+<option value="JITENDRA KUMAR MISHRA/CLI/BYT">JITENDRA KUMAR MISHRA/CLI/BYT</option>
+<option value="K P LAHARE/CLI/R">K P LAHRE/CLI/BIA</option>
+<option value="K P HIRWANI/CLI/BYT">K P HIRWANI/CLI/BYT</option>
+<option value="K. K. SAHU/CLI/BIA">K. K. SAHU/CLI/BIA</option>
+<option value="KHUSHAL SINGH/CLI/DRZ">KHUSHAL SINGH/CLI/DRZ</option>
+<option value="KAMLESH KUMAR RAJABHOJ/CLI/BIA">KAMLESH KUMAR RAJABHOJ/CLI/BIA</option>
+<option value="MAHESHWAR/CLI/BIA">MAHESHWAR/CLI/BIA</option>
+<option value="MANOJ KUMAR SAO/CLI/R">MANOJ KUMAR SAO/CLI/R</option>
+<option value="MANSUKH LAL CHANDRAKAR/CLI/R">MANSUKH LAL CHANDRAKAR/CLI/R</option>
+<option value="MOHIT KUMAR SWARNKAR/CLI/BIA">MOHIT KUMAR SWARNKAR/CLI/BIA</option>
+<option value="N. R. KARPAL/CLI/BIA">N. R. KARPAL/CLI/BIA</option>
+<option value="N.K. BHOI/CLI/R">N.K. BHOI/CLI/R</option>
+<option value="NITIN KUKDE/CLI/BYT">NITIN KUKDE/CLI/BYT</option>
+<option value="NIRMAL KUMAR/CLI/BYT">NIRMAL KUMAR/CLI/BYT</option>
+<option value="P.K. PATEL/CLI/BIA">P.K. PATEL/CLI/BIA</option>
+<option value="PANKAJ KUMAR SINGH/CLI/BIA">PANKAJ KUMAR SINGH/CLI/BIA</option>
+<option value="PAWAN KUMAR SINGH/CLI/BIA">PAWAN KUMAR SINGH/CLI/BIA
+<option value="PURAN LAL PATEL/CLI/BYT">PURAN LAL PATEL/CLI/BYT</option>
+<option value="RAJENDRA KUMAR/CLI/BIA">RAJENDRA KUMAR/CLI/BIA</option>
+<option value="PALAK RAM ALENDRA/CLI/DRZ">PALAK RAM ALENDRA/CLI/DRZ</option>
+<option value="RAJESH KUMAR DESHMUKH/CLI/R">RAJESH KUMAR DESHMUKH/CLI/R</option>
+<option value="RAJNEESH BENERJEE/CLI/BIA">RAJNEESH BENERJEE/CLI/BIA</option>
+<option value="RANJEET SINGH/CLI/BYT">RANJEET SINGH/CLI/BYT</option>
+<option value="RAKESH KUMAR KOSTA/CLI/DRZ">RAKESH KUMAR KOSTA/CLI/DRZ</option>
+<option value="RAJESH KUMAR DESHMUKH/CLI/R/CLI/DRZ">RAJESH KUMAR DESHMUKH/CLI/R</option>
+<option value="S K GAUTAM/CLI/BIA">S K GAUTAM/CLI/BIA</option>
+<option value="S S HUSSAIN/CLI/BIA">S S HUSSAIN/CLI/BIA</option>
+<option value="S. C. RAI/CLI/BIA">S. C. RAI/CLI/BIA</option>
+<option value="S. K. SINGH/CLI/BIA">S. K. SINGH/CLI/BIA</option>
+<option value="S. L. SONI/CLI/R">S. L. SONI/CLI/R</option>
+<option value="SANJAY KUMAR ROY/CLI/BIA">SANJAY KUMAR ROY/CLI/BIA</option>
+<option value="SANJAY SINGH/CLI/DRZ">SANJAY SINGH/CLI/DRZ</option>
+<option value="SANJEEV KUMAR SHARMA/CLI/BIA">SANJEEV KUMAR SHARMA/CLI/BIA</option>
+<option value="SANTOSH KUAMAR PATKAR/CLI/BIA">SANTOSH KUAMAR PATKAR/CLI/BIA</option>
+<option value="SHAILENDRA SINGH/CLI/BIA">SHAILENDRA SINGH/CLI/BIA</option>
+<option value="SUNDEEP KUMAR SHARMA/CLI/BIA">SUNDEEP KUMAR SHARMA/CLI/BIA</option>
+<option value="SUNIL KUMAR DEWANGAN/CLI/BIA">SUNIL KUMAR DEWANGAN/CLI/BIA</option>
+<option value="SURENDRA KUMAR SONI/CLI/BYT">SURENDRA KUMAR SONI/CLI/BYT</option>
+<option value="SATYENDRA KUMAR/CLI/DRZ">SATYENDRA KUMAR/CLI/DRZ</option>
+<option value="SANAT KUMAR SAHU/CLI/DRZ">SANAT KUMAR SAHU/CLI/DRZ</option>
+<option value="TEST ID/CLI/BIA">TEST ID/CLI/BIA</option>
+<option value="V.K. BHAGAT/CLI/R">V.K. BHAGAT/CLI/R</option>
+<option value="VIJAY KUMAR ARYA/CLI/BIA">VIJAY KUMAR ARYA/CLI/BIA</option>
+<option value="VIKAS SHENDE/CLI/R">VIKAS SHENDE/CLI/R</option>
+<option value="VINAY KUMAR VINCHURE/CLI/BIA">VINAY KUMAR VINCHURE/CLI/BIA</option>
+<option value="VINAY PANTAWANE/CLI/BIA">VINAY PANTAWANE/CLI/BIA</option>
+<option value="Y. RAMU/CLI/BIA">Y. RAMU/CLI/BIA</option>
+<option value="YOGESH KUMAR MIHAULIA/CLI/BIA">YOGESH KUMAR MIHAULIA/CLI/BIA</option>
+<option value="OTHERS">OTHERS</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="ds_crew_name">Crew Name</label>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="ds_crew_name" name="ds_crew_name" placeholder="Loading crew list..." autocomplete="off" disabled>
+          <div class="autocomplete-list" id="ds_crew_name_list"></div>
+        </div>
+      </div>
+
+      <div class="form-group" id="ds_crew_name_other_group" style="display:none;">
+        <label for="ds_crew_name_other">Enter Crew Name (Manual)</label>
+        <input type="text" id="ds_crew_name_other" name="ds_crew_name_other" placeholder="Type crew name manually" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="ds_designation">Designation</label>
+        <input type="text" id="ds_designation" name="ds_designation" placeholder="Auto-filled" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="ds_crew_cms">Crew CMS ID</label>
+        <input type="text" id="ds_crew_cms" name="ds_crew_cms" placeholder="Auto-filled" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="ds_hq">HQ</label>
+        <input type="text" id="ds_hq" name="ds_hq" placeholder="Auto-filled" readonly>
+      </div>
+
+      <div class="form-group" id="ds_train_group">
+        <label for="ds_train_no">Train No</label>
+        <input type="text" id="ds_train_no" name="ds_train_no" placeholder="Enter Train No">
+      </div>
+
+      <div class="form-group" id="ds_loco_group">
+        <label for="ds_loco_no">Loco No</label>
+        <input type="text" id="ds_loco_no" name="ds_loco_no" placeholder="Enter Loco No">
+      </div>
+
+      <div class="form-group" id="ds_section_group">
+        <label for="ds_section">Section</label>
+        <select id="ds_section" name="ds_section">
+          <option value="">-- Select Section --</option>
+          <option value="BSP-BMY">BSP-BMY</option>
+          <option value="BSP-DURG">BSP-DURG</option>
+        </select>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="ds_remarks">Remarks if any</label>
+        <textarea id="ds_remarks" name="ds_remarks" rows="3" placeholder="Enter counselling remarks"></textarea>
+      </div>
+
+    </div>
+    </div>
+    <!-- END SECTION 1 -->
+
+    <!-- SECTION 2: RS HOLDING PRACTICE / APPLICATION PRACTICE -->
+    <div id="rsSection">
+    <div class="section-title">2. RS APPLICATION PRACTICE</div>
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label for="rs_date">Date</label>
+        <input type="date" id="rs_date" name="rs_date">
+      </div>
+
+      <div class="form-group">
+        <label for="rs_signal">Signal Name/No</label>
+        <input type="text" id="rs_signal" name="rs_signal" placeholder="Enter Signal Name/No">
+      </div>
+
+      <div class="form-group">
+        <label for="rs_cli_name">CLI Name</label>
+        <select id="rs_cli_name" name="rs_cli_name">
+          <option value="">-- Select CLI Name --</option>
+          <option value="A K REDDY/CLI/BIA">A K REDDY/CLI/R</option>
+<option value="A.R.TARAM/CLI/BIA">A.R. TARAM/CLI/BIA</option>
+<option value="ABDUL MOIN KHAN/CLI/BIA">ABDUL MOIN KHAN/CLI/BIA</option>
+<option value="AKHILESH KUMAR/CLI/BIA">AKHILESH KUMAR/CLI/BIA</option>
+<option value="AMIT KUMAR BANKURE/CLI/BYT">AMIT KUMAR BANKURE/CLI/BYT</option>
+<option value="ANANT PRAKASH SHRIVASTAVA/CLI/BIA">ANANT PRAKASH SHRIVASTAVA/CLI/BIA</option>
+<option value="ANIL KUMAR/CLI/BIA">ANIL KUMAR/CLI/BIA</option>
+<option value="ANKIT RAM KANT/CLI/BIA">ANKIT RAM KANT/CLI/BIA</option>
+<option value="AVON KUMAR SAHU/CLI/R">AVON KUMAR SAHU/CLI/R</option>
+<option value="ASHISH WANJARI/CLI/BYT">ASHISH WANJARI/CLI/BYT</option>
+<option value="B B KUSHWAHA/CLI/BIA">B B KUSHWAHA/CLI/BIA</option>
+<option value="B K HARMUKH/CLI/BIA">B K HARMUKH/CLI/BIA</option>
+<option value="B. K. SAHA/CLI/BIA">B. K. SAHA/CLI/BIA</option>
+<option value="B.K.SONI/CLI/BIA">B.K.SONI/CLI/BIA</option>
+<option value="BHARAT SINGH ATBHAIYYA/CLI/R">BHARAT SINGH ATBHAIYYA/CLI/R</option>
+<option value="BHOLI CHAUDHARY/CLI/R">BHOLI CHAUDHARY/CLI/R</option>
+<option value="BIKRAMJIT KANRAR/CLI/BIA">BIKRAMJIT KANRAR/CLI/BIA</option>
+<option value="BINOD KUMAR RAM/CLI/R">BINOD KUMAR RAM/CLI/R</option>
+<option value="CLI NAME/CLI/BIA">CLI NAME/CLI/BIA</option>
+<option value="DEEPANNITA PUNTAMBEKAR/CLI/BIA">DEEPANNITA PUNTAMBEKAR/CLI/BIA</option>
+<option value="DILLI RAO/CLI/BYT">DILLI RAO/CLI/BYT</option>
+<option value="G. C. BISWAS/CLI/R">G. C. BISWAS/CLI/R</option>
+<option value="G. V. R. K. MADHU/CLI/BIA">G. V. R. K. MADHU/CLI/BIA</option>
+<option value="GIRDHARI LAL/CLI/R">GIRDHARI LAL/CLI/R</option>
+<option value="JAISHANKAR SHARMA/CLI/BIA">JAISHANKAR SHARMA/CLI/BIA</option>
+<option value="JITENDRA KUMAR MISHRA/CLI/BYT">JITENDRA KUMAR MISHRA/CLI/BYT</option>
+<option value="K P LAHARE/CLI/R">K P LAHRE/CLI/BIA</option>
+<option value="K P HIRWANI/CLI/BYT">K P HIRWANI/CLI/BYT</option>
+<option value="K. K. SAHU/CLI/BIA">K. K. SAHU/CLI/BIA</option>
+<option value="KHUSHAL SINGH/CLI/DRZ">KHUSHAL SINGH/CLI/DRZ</option>
+<option value="KAMLESH KUMAR RAJABHOJ/CLI/BIA">KAMLESH KUMAR RAJABHOJ/CLI/BIA</option>
+<option value="MAHESHWAR/CLI/BIA">MAHESHWAR/CLI/BIA</option>
+<option value="MANOJ KUMAR SAO/CLI/R">MANOJ KUMAR SAO/CLI/R</option>
+<option value="MANSUKH LAL CHANDRAKAR/CLI/R">MANSUKH LAL CHANDRAKAR/CLI/R</option>
+<option value="MOHIT KUMAR SWARNKAR/CLI/BIA">MOHIT KUMAR SWARNKAR/CLI/BIA</option>
+<option value="N. R. KARPAL/CLI/BIA">N. R. KARPAL/CLI/BIA</option>
+<option value="N.K. BHOI/CLI/R">N.K. BHOI/CLI/R</option>
+<option value="NITIN KUKDE/CLI/BYT">NITIN KUKDE/CLI/BYT</option>
+<option value="NIRMAL KUMAR/CLI/BYT">NIRMAL KUMAR/CLI/BYT</option>
+<option value="P.K. PATEL/CLI/BIA">P.K. PATEL/CLI/BIA</option>
+<option value="PANKAJ KUMAR SINGH/CLI/BIA">PANKAJ KUMAR SINGH/CLI/BIA</option>
+<option value="PAWAN KUMAR SINGH/CLI/BIA">PAWAN KUMAR SINGH/CLI/BIA
+<option value="PURAN LAL PATEL/CLI/BYT">PURAN LAL PATEL/CLI/BYT</option>
+<option value="RAJENDRA KUMAR/CLI/BIA">RAJENDRA KUMAR/CLI/BIA</option>
+<option value="PALAK RAM ALENDRA/CLI/DRZ">PALAK RAM ALENDRA/CLI/DRZ</option>
+<option value="RAJESH KUMAR DESHMUKH/CLI/R">RAJESH KUMAR DESHMUKH/CLI/R</option>
+<option value="RAJNEESH BENERJEE/CLI/BIA">RAJNEESH BENERJEE/CLI/BIA</option>
+<option value="RANJEET SINGH/CLI/BYT">RANJEET SINGH/CLI/BYT</option>
+<option value="RAKESH KUMAR KOSTA/CLI/DRZ">RAKESH KUMAR KOSTA/CLI/DRZ</option>
+<option value="RAJESH KUMAR DESHMUKH/CLI/R/CLI/DRZ">RAJESH KUMAR DESHMUKH/CLI/R</option>
+<option value="S K GAUTAM/CLI/BIA">S K GAUTAM/CLI/BIA</option>
+<option value="S S HUSSAIN/CLI/BIA">S S HUSSAIN/CLI/BIA</option>
+<option value="S. C. RAI/CLI/BIA">S. C. RAI/CLI/BIA</option>
+<option value="S. K. SINGH/CLI/BIA">S. K. SINGH/CLI/BIA</option>
+<option value="S. L. SONI/CLI/R">S. L. SONI/CLI/R</option>
+<option value="SANJAY KUMAR ROY/CLI/BIA">SANJAY KUMAR ROY/CLI/BIA</option>
+<option value="SANJAY SINGH/CLI/DRZ">SANJAY SINGH/CLI/DRZ</option>
+<option value="SANJEEV KUMAR SHARMA/CLI/BIA">SANJEEV KUMAR SHARMA/CLI/BIA</option>
+<option value="SANTOSH KUAMAR PATKAR/CLI/BIA">SANTOSH KUAMAR PATKAR/CLI/BIA</option>
+<option value="SHAILENDRA SINGH/CLI/BIA">SHAILENDRA SINGH/CLI/BIA</option>
+<option value="SUNDEEP KUMAR SHARMA/CLI/BIA">SUNDEEP KUMAR SHARMA/CLI/BIA</option>
+<option value="SUNIL KUMAR DEWANGAN/CLI/BIA">SUNIL KUMAR DEWANGAN/CLI/BIA</option>
+<option value="SURENDRA KUMAR SONI/CLI/BYT">SURENDRA KUMAR SONI/CLI/BYT</option>
+<option value="SATYENDRA KUMAR/CLI/DRZ">SATYENDRA KUMAR/CLI/DRZ</option>
+<option value="SANAT KUMAR SAHU/CLI/DRZ">SANAT KUMAR SAHU/CLI/DRZ</option>
+<option value="TEST ID/CLI/BIA">TEST ID/CLI/BIA</option>
+<option value="V.K. BHAGAT/CLI/R">V.K. BHAGAT/CLI/R</option>
+<option value="VIJAY KUMAR ARYA/CLI/BIA">VIJAY KUMAR ARYA/CLI/BIA</option>
+<option value="VIKAS SHENDE/CLI/R">VIKAS SHENDE/CLI/R</option>
+<option value="VINAY KUMAR VINCHURE/CLI/BIA">VINAY KUMAR VINCHURE/CLI/BIA</option>
+<option value="VINAY PANTAWANE/CLI/BIA">VINAY PANTAWANE/CLI/BIA</option>
+<option value="Y. RAMU/CLI/BIA">Y. RAMU/CLI/BIA</option>
+<option value="YOGESH KUMAR MIHAULIA/CLI/BIA">YOGESH KUMAR MIHAULIA/CLI/BIA</option>
+<option value="OTHERS">OTHERS</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="rs_lp_name">LP Name</label>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="rs_lp_name" name="rs_lp_name" placeholder="Loading LP list..." autocomplete="off" disabled>
+          <div class="autocomplete-list" id="rs_lp_name_list"></div>
+        </div>
+      </div>
+
+      <div class="form-group" id="rs_lp_name_other_group" style="display:none;">
+        <label for="rs_lp_name_other">Enter LP Name (Manual)</label>
+        <input type="text" id="rs_lp_name_other" name="rs_lp_name_other" placeholder="Type LP name manually" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="rs_alp_name">ALP Name</label>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="rs_alp_name" name="rs_alp_name" placeholder="Loading ALP list..." autocomplete="off" disabled>
+          <div class="autocomplete-list" id="rs_alp_name_list"></div>
+        </div>
+      </div>
+
+      <div class="form-group" id="rs_alp_name_other_group" style="display:none;">
+        <label for="rs_alp_name_other">Enter ALP Name (Manual)</label>
+        <input type="text" id="rs_alp_name_other" name="rs_alp_name_other" placeholder="Type ALP name manually" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="rs_lp_hq">LP HQ</label>
+        <input type="text" id="rs_lp_hq" name="rs_lp_hq" placeholder="Auto-filled" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="rs_lp_cms">LP CMS ID</label>
+        <input type="text" id="rs_lp_cms" name="rs_lp_cms" placeholder="Auto-filled" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="rs_alp_hq">ALP HQ</label>
+        <input type="text" id="rs_alp_hq" name="rs_alp_hq" placeholder="Auto-filled" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="rs_alp_cms">ALP CMS ID</label>
+        <input type="text" id="rs_alp_cms" name="rs_alp_cms" placeholder="Auto-filled" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="rs_train_no">Train No</label>
+        <input type="text" id="rs_train_no" name="rs_train_no" placeholder="Enter Train No">
+      </div>
+
+      <div class="form-group">
+        <label for="rs_loco_no">Loco No</label>
+        <input type="text" id="rs_loco_no" name="rs_loco_no" placeholder="Enter Loco No">
+      </div>
+
+      <div class="form-group">
+        <label for="rs_section">Section</label>
+        <select id="rs_section" name="rs_section">
+          <option value="">-- Select Section --</option>
+          <option value="BSP-BMY">BSP-BMY</option>
+          <option value="BSP-DURG">BSP-DURG</option>
+        </select>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="rs_remarks">Remarks if any</label>
+        <textarea id="rs_remarks" name="rs_remarks" rows="3" placeholder="Enter RS holding/application practice details"></textarea>
+      </div>
+
+    </div>
+
+    </div>
+    </div>
+    <!-- END SECTION 2 -->
+
+    <div id="submitMessage" style="display:none; text-align:center; color:#1a7d1a; font-weight:bold; font-size:15px; margin-top:20px; padding:10px; background:#e6f7e6; border:1px solid #1a7d1a; border-radius:6px;">
+      DATA SUBMITTED SUCCESSFULLY
+    </div>
+
+    <div class="submit-row">
+      <button type="submit">Submit</button>
+    </div>
+
+  </form>
+</div>
+
+<script>
+const dangerSection = document.getElementById('dangerSection');
+const rsSection = document.getElementById('rsSection');
+const selector = document.getElementById('section_selector');
+
+function updateSections() {
+  const val = selector.value;
+  if (val === 'danger') {
+    dangerSection.style.display = 'block';
+    rsSection.style.display = 'none';
+  } else if (val === 'rs') {
+    dangerSection.style.display = 'none';
+    rsSection.style.display = 'block';
+  } else {
+    dangerSection.style.display = 'none';
+    rsSection.style.display = 'none';
+  }
+}
+
+selector.addEventListener('change', updateSections);
+updateSections(); // run on load to hide both initially
+
+const dsPlace = document.getElementById('ds_place');
+const dsLobbyGroup = document.getElementById('ds_lobby_group');
+const dsSectionGroup = document.getElementById('ds_section_group');
+const dsTrainGroup = document.getElementById('ds_train_group');
+const dsLocoGroup = document.getElementById('ds_loco_group');
+
+function updateDsPlace() {
+  const val = dsPlace.value;
+  if (val === 'Lobby') {
+    dsLobbyGroup.style.display = 'flex';
+    dsSectionGroup.style.display = 'none';
+    dsTrainGroup.style.display = 'none';
+    dsLocoGroup.style.display = 'none';
+  } else if (val === 'Section') {
+    dsLobbyGroup.style.display = 'none';
+    dsSectionGroup.style.display = 'flex';
+    dsTrainGroup.style.display = 'flex';
+    dsLocoGroup.style.display = 'flex';
+  } else {
+    dsLobbyGroup.style.display = 'none';
+    dsSectionGroup.style.display = 'none';
+    dsTrainGroup.style.display = 'flex';
+    dsLocoGroup.style.display = 'flex';
+  }
+}
+
+dsPlace.addEventListener('change', updateDsPlace);
+updateDsPlace(); // run on load
+
+// ===== CONFIG: Paste your deployed Apps Script Web App URL here =====
+const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytgH6bHWlkN7qLKIc3z_2ZsfdmIuYk_5vzSf4HSgEYuRsjDOmhQw960qJESUGzYCUv/exec";
+
+document.getElementById('rbdForm').addEventListener('submit', function(e){
+  e.preventDefault();
+
+  const formData = new FormData(this);
+  const data = {};
+  formData.forEach((value, key) => { data[key] = value; });
+
+  // If "OTHERS" was selected for a name field, submit the manually typed name instead
+  if (data['ds_crew_name'] === 'OTHERS' && data['ds_crew_name_other']) {
+    data['ds_crew_name'] = data['ds_crew_name_other'].trim();
+  }
+  if (data['rs_lp_name'] === 'OTHERS' && data['rs_lp_name_other']) {
+    data['rs_lp_name'] = data['rs_lp_name_other'].trim();
+  }
+  if (data['rs_alp_name'] === 'OTHERS' && data['rs_alp_name_other']) {
+    data['rs_alp_name'] = data['rs_alp_name_other'].trim();
+  }
+  delete data['ds_crew_name_other'];
+  delete data['rs_lp_name_other'];
+  delete data['rs_alp_name_other'];
+  const sectionVal = document.getElementById('section_selector').value;
+  const sectionLabelMap = { danger: 'APPROACHING DANGER COUNSELLING', rs: 'RS PRACTICE' };
+  const sheetNameMap = { danger: 'APPROACHING DANGER COUNSELLING', rs: 'RS PRACTICE' };
+  data['section_type'] = sectionLabelMap[sectionVal] || sectionVal;
+  data['section_selector'] = sectionLabelMap[sectionVal] || sectionVal;
+  data['target_sheet'] = sheetNameMap[sectionVal] || 'Sheet1';
+  data['submitted_at'] = new Date().toLocaleString();
+
+  if (GOOGLE_SHEET_SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
+    alert('Google Sheet URL not configured yet. Please set GOOGLE_SHEET_SCRIPT_URL in the script.');
+    return;
+  }
+
+  fetch(GOOGLE_SHEET_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(() => {
+    const msg = document.getElementById('submitMessage');
+    msg.style.display = 'block';
+    this.reset();
+    dsCrewNameOtherGroup.style.display = 'none';
+    rsLpNameOtherGroup.style.display = 'none';
+    rsAlpNameOtherGroup.style.display = 'none';
+    updateSections();
+    updateDsPlace();
+    setTimeout(() => { msg.style.display = 'none'; }, 4000);
+  })
+  .catch((err) => {
+    console.error(err);
+    alert('Error submitting form. Please check your internet connection or script URL.');
+  });
+});
+
+// ===== CREW DATA: fetched live from Google Sheet (RAIPUR DIVISION CREW) =====
+// IMPORTANT: The sheet must be shared as "Anyone with the link - Viewer"
+// (Google Sheet > Share) or this will fail to load.
+// Uses a JSONP <script> tag (not fetch) so it works even when this HTML
+// file is opened directly from disk (file://), where fetch() to an
+// external domain gets blocked by the browser's CORS policy.
+const CREW_SHEET_ID = '1p-anwng3nFUpeqrOcUlQ5Kv-5B2hyvjyVswgdlOGhlo';
+const CREW_SHEET_GID = '0'; // change if crew list lives on a different tab
+
+let CREW_DATA = [];
+let crewLoadTimeoutId = null;
+
+function normalizeHeader(h) {
+  return (h || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function setNameInputState(inputEl, placeholderText, disabled) {
+  inputEl.placeholder = placeholderText;
+  inputEl.disabled = !!disabled;
+  if (disabled) inputEl.value = '';
+}
+
+function enableNameInputs() {
+  setNameInputState(dsCrewName, 'Type to search crew name...', false);
+  setNameInputState(rsLpName, 'Type to search LP name...', false);
+  setNameInputState(rsAlpName, 'Type to search ALP name...', false);
+}
+
+function showCrewLoadError(reason) {
+  console.error('Failed to load LP/ALP/Crew names from Google Sheet:', reason);
+  const msg = 'Could not load (' + (reason || 'check sheet sharing') + ')';
+  setNameInputState(dsCrewName, msg, true);
+  setNameInputState(rsLpName, msg, true);
+  setNameInputState(rsAlpName, msg, true);
+}
+
+// Called automatically by the JSONP response from Google
+function handleCrewSheetResponse(response) {
+  clearTimeout(crewLoadTimeoutId);
+  try {
+    if (!response || response.status === 'error') {
+      const detail = response && response.errors && response.errors[0] &&
+        (response.errors[0].detailed_message || response.errors[0].message);
+      throw new Error(detail || 'Google Sheets returned an error');
+    }
+
+    const table = response.table;
+    const headers = table.cols.map(c => normalizeHeader(c.label));
+    const nameIdx = headers.findIndex(h => ['name', 'crewname', 'lpalpname', 'employeename'].includes(h));
+    const desigIdx = headers.findIndex(h => ['designation', 'desig', 'category'].includes(h));
+    const hqIdx = headers.findIndex(h => ['hq', 'headquarter', 'headquarters'].includes(h));
+    const cmsIdx = headers.findIndex(h => ['cms', 'cmsid', 'crewcmsid'].includes(h));
+
+    if (nameIdx === -1) {
+      throw new Error('no "Name" column found - sheet headers were: ' + table.cols.map(c => c.label).join(', '));
+    }
+
+    const getCell = (cells, idx) => {
+      if (idx < 0) return '';
+      const cell = cells[idx];
+      return (cell && cell.v != null) ? String(cell.v).trim() : '';
+    };
+
+    CREW_DATA = table.rows
+      .map(row => {
+        const cells = row.c || [];
+        return {
+          name: getCell(cells, nameIdx),
+          designation: getCell(cells, desigIdx).toUpperCase(),
+          hq: getCell(cells, hqIdx),
+          cms: getCell(cells, cmsIdx)
+        };
+      })
+      .filter(c => c.name);
+
+    enableNameInputs();
+  } catch (err) {
+    showCrewLoadError(err.message);
+  }
+}
+
+function loadCrewData() {
+  setNameInputState(dsCrewName, 'Loading crew list...', true);
+  setNameInputState(rsLpName, 'Loading LP list...', true);
+  setNameInputState(rsAlpName, 'Loading ALP list...', true);
+
+  const src = 'https://docs.google.com/spreadsheets/d/' + CREW_SHEET_ID +
+    '/gviz/tq?gid=' + CREW_SHEET_GID +
+    '&headers=1&tqx=out:json;responseHandler:handleCrewSheetResponse';
+
+  const script = document.createElement('script');
+  script.src = src;
+  script.onerror = function () {
+    showCrewLoadError('could not reach the sheet - is it shared "Anyone with the link"?');
+  };
+  document.body.appendChild(script);
+
+  // Safety net in case the script loads but never calls our handler
+  crewLoadTimeoutId = setTimeout(function () {
+    showCrewLoadError('timed out - check sheet sharing settings');
+  }, 10000);
+}
+
+function getAllCrewNames() {
+  const seen = new Set();
+  const names = [];
+  CREW_DATA.forEach(c => {
+    if (c.name && !seen.has(c.name)) { seen.add(c.name); names.push(c.name); }
+  });
+  return names;
+}
+
+function autoFillFromCrew(name, designationField, hqField, cmsField) {
+  const crew = CREW_DATA.find(c => c.name === name);
+  if (crew) {
+    designationField.value = crew.designation;
+    hqField.value = crew.hq;
+    cmsField.value = crew.cms;
+  } else {
+    designationField.value = '';
+    hqField.value = '';
+    cmsField.value = '';
+  }
+}
+
+function autoFillHqCms(name, hqField, cmsField) {
+  const crew = CREW_DATA.find(c => c.name === name);
+  if (crew) {
+    hqField.value = crew.hq;
+    cmsField.value = crew.cms;
+  } else {
+    hqField.value = '';
+    cmsField.value = '';
+  }
+}
+
+// ===== AUTOCOMPLETE WIDGET (type-to-search behavior for name fields) =====
+function setupAutocomplete(inputEl, listEl, getOptions, onSelect) {
+  let activeIndex = -1;
+
+  function closeList() {
+    listEl.innerHTML = '';
+    listEl.style.display = 'none';
+    activeIndex = -1;
+  }
+
+  function setActive(items) {
+    items.forEach((it, i) => it.classList.toggle('active', i === activeIndex));
+    if (activeIndex > -1) items[activeIndex].scrollIntoView({ block: 'nearest' });
+  }
+
+  function renderMatches(matches) {
+    listEl.innerHTML = '';
+    activeIndex = -1;
+    if (!matches.length) { closeList(); return; }
+    matches.forEach(name => {
+      const item = document.createElement('div');
+      item.className = 'autocomplete-item';
+      item.textContent = name;
+      item.addEventListener('mousedown', function (e) {
+        e.preventDefault(); // keep focus so blur doesn't close list before click registers
+        inputEl.value = name;
+        closeList();
+        onSelect(name);
+      });
+      listEl.appendChild(item);
+    });
+    listEl.style.display = 'block';
+  }
+
+  function showMatches() {
+    if (inputEl.disabled) return;
+    const q = inputEl.value.trim().toLowerCase();
+    onSelect(inputEl.value.trim()); // live exact-match autofill as they type/paste
+    if (!q) { closeList(); return; }
+    const matches = getOptions().filter(n => n.toLowerCase().includes(q)).slice(0, 50);
+    if (!matches.includes('OTHERS')) matches.push('OTHERS'); // always offer manual entry alongside matches
+    renderMatches(matches);
+  }
+
+  inputEl.addEventListener('input', showMatches);
+  inputEl.addEventListener('focus', showMatches);
+
+  inputEl.addEventListener('keydown', function (e) {
+    const items = listEl.querySelectorAll('.autocomplete-item');
+    if (!items.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIndex = Math.min(activeIndex + 1, items.length - 1);
+      setActive(items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIndex = Math.max(activeIndex - 1, 0);
+      setActive(items);
+    } else if (e.key === 'Enter') {
+      if (activeIndex > -1) {
+        e.preventDefault();
+        const name = items[activeIndex].textContent;
+        inputEl.value = name;
+        closeList();
+        onSelect(name);
+      }
+    } else if (e.key === 'Escape') {
+      closeList();
+    }
+  });
+
+  inputEl.addEventListener('blur', function () {
+    setTimeout(closeList, 150); // delay so a click on an item registers first
+  });
+}
+
+// ----- "OTHERS" manual-entry toggle for name autocomplete fields -----
+function toggleOtherNameInput(name, groupEl, otherInputEl) {
+  if (name === 'OTHERS') {
+    groupEl.style.display = 'flex';
+    otherInputEl.focus();
+  } else {
+    groupEl.style.display = 'none';
+    otherInputEl.value = '';
+  }
+}
+
+// ----- Danger Section -----
+const dsCrewName = document.getElementById('ds_crew_name');
+const dsCrewNameList = document.getElementById('ds_crew_name_list');
+const dsCrewNameOtherGroup = document.getElementById('ds_crew_name_other_group');
+const dsCrewNameOther = document.getElementById('ds_crew_name_other');
+const dsDesignation = document.getElementById('ds_designation');
+const dsCrewCms = document.getElementById('ds_crew_cms');
+const dsHq = document.getElementById('ds_hq');
+
+setupAutocomplete(dsCrewName, dsCrewNameList, getAllCrewNames, function (name) {
+  toggleOtherNameInput(name, dsCrewNameOtherGroup, dsCrewNameOther);
+  autoFillFromCrew(name, dsDesignation, dsHq, dsCrewCms);
+});
+
+// ----- RS Section -----
+const rsLpName = document.getElementById('rs_lp_name');
+const rsLpNameList = document.getElementById('rs_lp_name_list');
+const rsLpNameOtherGroup = document.getElementById('rs_lp_name_other_group');
+const rsLpNameOther = document.getElementById('rs_lp_name_other');
+const rsAlpName = document.getElementById('rs_alp_name');
+const rsAlpNameList = document.getElementById('rs_alp_name_list');
+const rsAlpNameOtherGroup = document.getElementById('rs_alp_name_other_group');
+const rsAlpNameOther = document.getElementById('rs_alp_name_other');
+const rsLpHq = document.getElementById('rs_lp_hq');
+const rsLpCms = document.getElementById('rs_lp_cms');
+const rsAlpHq = document.getElementById('rs_alp_hq');
+const rsAlpCms = document.getElementById('rs_alp_cms');
+
+setupAutocomplete(rsLpName, rsLpNameList, getAllCrewNames, function (name) {
+  toggleOtherNameInput(name, rsLpNameOtherGroup, rsLpNameOther);
+  autoFillHqCms(name, rsLpHq, rsLpCms);
+});
+setupAutocomplete(rsAlpName, rsAlpNameList, getAllCrewNames, function (name) {
+  toggleOtherNameInput(name, rsAlpNameOtherGroup, rsAlpNameOther);
+  autoFillHqCms(name, rsAlpHq, rsAlpCms);
+});
+
+// Fetch LP / ALP / Crew names live from the Google Sheet
+loadCrewData();
+</script>
+</body>
+</html>
