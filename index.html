@@ -1,6 +1,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -317,11 +318,7 @@
 
       <div class="form-group" id="ds_section_group">
         <label for="ds_section">Section</label>
-        <select id="ds_section" name="ds_section">
-          <option value="">-- Select Section --</option>
-          <option value="BSP-BMY">BSP-BMY</option>
-          <option value="BSP-DURG">BSP-DURG</option>
-        </select>
+        <input type="text" id="ds_section" name="ds_section" placeholder="Enter Section manually" autocomplete="off">
       </div>
 
       <div class="form-group full-width">
@@ -487,11 +484,7 @@
 
       <div class="form-group">
         <label for="rs_section">Section</label>
-        <select id="rs_section" name="rs_section">
-          <option value="">-- Select Section --</option>
-          <option value="BSP-BMY">BSP-BMY</option>
-          <option value="BSP-DURG">BSP-DURG</option>
-        </select>
+        <input type="text" id="rs_section" name="rs_section" placeholder="Enter Section manually" autocomplete="off">
       </div>
 
       <div class="form-group full-width">
@@ -509,8 +502,16 @@
       DATA SUBMITTED SUCCESSFULLY
     </div>
 
+    <div id="submittingMessage" style="display:none; text-align:center; color:#856404; font-weight:bold; font-size:15px; margin-top:20px; padding:10px; background:#fff3cd; border:1px solid #856404; border-radius:6px;">
+      SUBMITTING... PLEASE WAIT
+    </div>
+
+    <div id="submitErrorMessage" style="display:none; text-align:center; color:#a30000; font-weight:bold; font-size:15px; margin-top:20px; padding:10px; background:#fde6e6; border:1px solid #a30000; border-radius:6px;">
+      SUBMISSION FAILED. PLEASE TRY AGAIN.
+    </div>
+
     <div class="submit-row">
-      <button type="submit">Submit</button>
+      <button type="submit" id="submitBtn">Submit</button>
     </div>
 
   </form>
@@ -570,8 +571,20 @@ updateDsPlace(); // run on load
 // ===== CONFIG: Paste your deployed Apps Script Web App URL here =====
 const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytgH6bHWlkN7qLKIc3z_2ZsfdmIuYk_5vzSf4HSgEYuRsjDOmhQw960qJESUGzYCUv/exec";
 
+const submitBtn = document.getElementById('submitBtn');
+const submitMessage = document.getElementById('submitMessage');
+const submittingMessage = document.getElementById('submittingMessage');
+const submitErrorMessage = document.getElementById('submitErrorMessage');
+
 document.getElementById('rbdForm').addEventListener('submit', function(e){
   e.preventDefault();
+
+  // Show "submitting" state immediately and lock the button to prevent double-submit
+  submitMessage.style.display = 'none';
+  submitErrorMessage.style.display = 'none';
+  submittingMessage.style.display = 'block';
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
 
   const formData = new FormData(this);
   const data = {};
@@ -600,6 +613,9 @@ document.getElementById('rbdForm').addEventListener('submit', function(e){
 
   if (GOOGLE_SHEET_SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
     alert('Google Sheet URL not configured yet. Please set GOOGLE_SHEET_SCRIPT_URL in the script.');
+    submittingMessage.style.display = 'none';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit';
     return;
   }
 
@@ -610,6 +626,9 @@ document.getElementById('rbdForm').addEventListener('submit', function(e){
     body: JSON.stringify(data)
   })
   .then(() => {
+    submittingMessage.style.display = 'none';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit';
     const msg = document.getElementById('submitMessage');
     msg.style.display = 'block';
     this.reset();
@@ -622,6 +641,11 @@ document.getElementById('rbdForm').addEventListener('submit', function(e){
   })
   .catch((err) => {
     console.error(err);
+    submittingMessage.style.display = 'none';
+    submitErrorMessage.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit';
+    setTimeout(() => { submitErrorMessage.style.display = 'none'; }, 5000);
     alert('Error submitting form. Please check your internet connection or script URL.');
   });
 });
