@@ -3,6 +3,8 @@
 
 
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,6 +86,17 @@
     outline: none;
     border-color: #003366;
     box-shadow: 0 0 4px rgba(0,51,102,0.3);
+  }
+  .field-error {
+    border-color: #cc0000 !important;
+    background-color: #fff0f0 !important;
+    box-shadow: 0 0 4px rgba(204,0,0,0.3) !important;
+  }
+  .error-msg {
+    color: #cc0000;
+    font-size: 12px;
+    margin-top: 3px;
+    display: none;
   }
   .full-width {
     grid-column: 1 / -1;
@@ -173,7 +186,15 @@
 
       <div class="form-group">
         <label for="ds_date">Date</label>
-        <input type="date" id="ds_date" name="ds_date">
+        <div style="position:relative;">
+          <input type="text" id="ds_date" name="ds_date" placeholder="DD/MM/YYYY" maxlength="10" style="width:100%; box-sizing:border-box; padding-right:36px;">
+          <input type="date" id="ds_date_picker" style="position:absolute; right:6px; top:50%; transform:translateY(-50%); width:24px; height:24px; padding:0; border:none; background:transparent; cursor:pointer;">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="ds_time">Time</label>
+        <input type="text" id="ds_time" name="ds_time" placeholder="HH:MM">
       </div>
 
       <div class="form-group">
@@ -338,7 +359,15 @@
 
       <div class="form-group">
         <label for="rs_date">Date</label>
-        <input type="date" id="rs_date" name="rs_date">
+        <div style="position:relative;">
+          <input type="text" id="rs_date" name="rs_date" placeholder="DD/MM/YYYY" maxlength="10" style="width:100%; box-sizing:border-box; padding-right:36px;">
+          <input type="date" id="rs_date_picker" style="position:absolute; right:6px; top:50%; transform:translateY(-50%); width:24px; height:24px; padding:0; border:none; background:transparent; cursor:pointer;">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="rs_time">Time</label>
+        <input type="text" id="rs_time" name="rs_time" placeholder="HH:MM">
       </div>
 
       <div class="form-group">
@@ -511,6 +540,10 @@
       SUBMISSION FAILED. PLEASE TRY AGAIN.
     </div>
 
+    <div id="validationErrorBanner" style="display:none; text-align:center; color:#a30000; font-weight:bold; font-size:15px; margin-top:20px; padding:12px; background:#fde6e6; border:2px solid #a30000; border-radius:6px;">
+      ⚠️ PLEASE FILL ALL MANDATORY DETAILS BEFORE SUBMITTING
+    </div>
+
     <div class="submit-row">
       <button type="submit" id="submitBtn">Submit</button>
     </div>
@@ -577,8 +610,139 @@ const submitMessage = document.getElementById('submitMessage');
 const submittingMessage = document.getElementById('submittingMessage');
 const submitErrorMessage = document.getElementById('submitErrorMessage');
 
+// ===== MANDATORY FIELD VALIDATION =====
+function clearErrors() {
+  document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+  document.querySelectorAll('.error-msg').forEach(el => el.remove());
+}
+
+function markError(el) {
+  el.classList.add('field-error');
+  const msg = document.createElement('span');
+  msg.className = 'error-msg';
+  msg.style.display = 'block';
+  msg.textContent = 'This field is required';
+  el.parentNode.appendChild(msg);
+}
+
+function validateForm() {
+  clearErrors();
+  let valid = true;
+  const sectionVal = document.getElementById('section_selector').value;
+
+  // Section selector itself
+  if (!sectionVal) {
+    markError(document.getElementById('section_selector'));
+    valid = false;
+  }
+
+  if (sectionVal === 'danger') {
+    // Date
+    const dsDate = document.getElementById('ds_date');
+    if (!dsDate.value.trim()) { markError(dsDate); valid = false; }
+
+    // Time
+    const dsTime = document.getElementById('ds_time');
+    if (!dsTime.value.trim()) { markError(dsTime); valid = false; }
+
+    // Place
+    const dsPlace = document.getElementById('ds_place');
+    if (!dsPlace.value) { markError(dsPlace); valid = false; }
+
+    // Lobby (only if Place = Lobby)
+    if (dsPlace.value === 'Lobby') {
+      const dsLobby = document.getElementById('ds_lobby');
+      if (!dsLobby.value) { markError(dsLobby); valid = false; }
+    }
+
+    // Section text (only if Place = Section)
+    if (dsPlace.value === 'Section') {
+      const dsSection = document.getElementById('ds_section');
+      if (!dsSection.value.trim()) { markError(dsSection); valid = false; }
+      const dsTrainNo = document.getElementById('ds_train_no');
+      if (!dsTrainNo.value.trim()) { markError(dsTrainNo); valid = false; }
+      const dsLocoNo = document.getElementById('ds_loco_no');
+      if (!dsLocoNo.value.trim()) { markError(dsLocoNo); valid = false; }
+    }
+
+    // CLI Name
+    const dsCliName = document.getElementById('ds_cli_name');
+    if (!dsCliName.value) { markError(dsCliName); valid = false; }
+
+    // Crew Name (autocomplete)
+    const dsCrewNameEl = document.getElementById('ds_crew_name');
+    if (!dsCrewNameEl.value.trim() || dsCrewNameEl.disabled) {
+      markError(dsCrewNameEl); valid = false;
+    } else if (dsCrewNameEl.value.trim() === 'OTHERS') {
+      const dsCrewNameOtherEl = document.getElementById('ds_crew_name_other');
+      if (!dsCrewNameOtherEl.value.trim()) { markError(dsCrewNameOtherEl); valid = false; }
+    }
+  }
+
+  if (sectionVal === 'rs') {
+    // Date
+    const rsDate = document.getElementById('rs_date');
+    if (!rsDate.value.trim()) { markError(rsDate); valid = false; }
+
+    // Time
+    const rsTime = document.getElementById('rs_time');
+    if (!rsTime.value.trim()) { markError(rsTime); valid = false; }
+
+    // Signal
+    const rsSignal = document.getElementById('rs_signal');
+    if (!rsSignal.value.trim()) { markError(rsSignal); valid = false; }
+
+    // CLI Name
+    const rsCliName = document.getElementById('rs_cli_name');
+    if (!rsCliName.value) { markError(rsCliName); valid = false; }
+
+    // LP Name
+    const rsLpNameEl = document.getElementById('rs_lp_name');
+    if (!rsLpNameEl.value.trim() || rsLpNameEl.disabled) {
+      markError(rsLpNameEl); valid = false;
+    } else if (rsLpNameEl.value.trim() === 'OTHERS') {
+      const rsLpNameOtherEl = document.getElementById('rs_lp_name_other');
+      if (!rsLpNameOtherEl.value.trim()) { markError(rsLpNameOtherEl); valid = false; }
+    }
+
+    // ALP Name
+    const rsAlpNameEl = document.getElementById('rs_alp_name');
+    if (!rsAlpNameEl.value.trim() || rsAlpNameEl.disabled) {
+      markError(rsAlpNameEl); valid = false;
+    } else if (rsAlpNameEl.value.trim() === 'OTHERS') {
+      const rsAlpNameOtherEl = document.getElementById('rs_alp_name_other');
+      if (!rsAlpNameOtherEl.value.trim()) { markError(rsAlpNameOtherEl); valid = false; }
+    }
+
+    // Train No
+    const rsTrainNo = document.getElementById('rs_train_no');
+    if (!rsTrainNo.value.trim()) { markError(rsTrainNo); valid = false; }
+
+    // Loco No
+    const rsLocoNo = document.getElementById('rs_loco_no');
+    if (!rsLocoNo.value.trim()) { markError(rsLocoNo); valid = false; }
+
+    // Section
+    const rsSection = document.getElementById('rs_section');
+    if (!rsSection.value.trim()) { markError(rsSection); valid = false; }
+  }
+
+  const banner = document.getElementById('validationErrorBanner');
+  if (!valid) {
+    banner.style.display = 'block';
+    // Scroll to first error
+    const firstError = document.querySelector('.field-error');
+    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } else {
+    banner.style.display = 'none';
+  }
+  return valid;
+}
+
 document.getElementById('rbdForm').addEventListener('submit', function(e){
   e.preventDefault();
+
+  if (!validateForm()) return;
 
   // Show "submitting" state immediately and lock the button to prevent double-submit
   submitMessage.style.display = 'none';
@@ -610,7 +774,10 @@ document.getElementById('rbdForm').addEventListener('submit', function(e){
   data['section_type'] = sectionLabelMap[sectionVal] || sectionVal;
   data['section_selector'] = sectionLabelMap[sectionVal] || sectionVal;
   data['target_sheet'] = sheetNameMap[sectionVal] || 'Sheet1';
-  data['submitted_at'] = new Date().toLocaleString();
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  data['submitted_at'] = pad(now.getDate()) + '/' + pad(now.getMonth() + 1) + '/' + now.getFullYear() +
+    ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
 
   if (GOOGLE_SHEET_SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
     alert('Google Sheet URL not configured yet. Please set GOOGLE_SHEET_SCRIPT_URL in the script.');
@@ -633,6 +800,8 @@ document.getElementById('rbdForm').addEventListener('submit', function(e){
     const msg = document.getElementById('submitMessage');
     msg.style.display = 'block';
     this.reset();
+    clearErrors();
+    document.getElementById('validationErrorBanner').style.display = 'none';
     dsCrewNameOtherGroup.style.display = 'none';
     rsLpNameOtherGroup.style.display = 'none';
     rsAlpNameOtherGroup.style.display = 'none';
@@ -863,6 +1032,47 @@ function setupAutocomplete(inputEl, listEl, getOptions, onSelect) {
   });
 }
 
+// ----- Link calendar date-picker icon to the DD/MM/YYYY text box -----
+function setupDatePicker(textInput, pickerInput) {
+  pickerInput.addEventListener('change', function () {
+    if (!pickerInput.value) return;
+    const [y, m, d] = pickerInput.value.split('-');
+    textInput.value = d + '/' + m + '/' + y;
+  });
+}
+setupDatePicker(document.getElementById('ds_date'), document.getElementById('ds_date_picker'));
+setupDatePicker(document.getElementById('rs_date'), document.getElementById('rs_date_picker'));
+
+// ----- Auto-format date text inputs as DD/MM/YYYY while typing -----
+function setupDateAutoFormat(inputEl) {
+  inputEl.addEventListener('input', function () {
+    let digits = inputEl.value.replace(/\D/g, '').slice(0, 8);
+    let formatted = digits;
+    if (digits.length > 4) {
+      formatted = digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4);
+    } else if (digits.length > 2) {
+      formatted = digits.slice(0, 2) + '/' + digits.slice(2);
+    }
+    inputEl.value = formatted;
+  });
+}
+setupDateAutoFormat(document.getElementById('ds_date'));
+setupDateAutoFormat(document.getElementById('rs_date'));
+
+// ----- Auto-format time text inputs as HH:MM while typing -----
+function setupTimeAutoFormat(inputEl) {
+  inputEl.addEventListener('input', function () {
+    let digits = inputEl.value.replace(/\D/g, '').slice(0, 4);
+    let formatted = digits;
+    if (digits.length > 2) {
+      formatted = digits.slice(0, 2) + ':' + digits.slice(2);
+    }
+    inputEl.value = formatted;
+  });
+}
+setupTimeAutoFormat(document.getElementById('ds_time'));
+setupTimeAutoFormat(document.getElementById('rs_time'));
+
 // ----- "OTHERS" manual-entry toggle for name autocomplete fields -----
 function toggleOtherNameInput(name, groupEl, otherInputEl) {
   if (name === 'OTHERS') {
@@ -872,6 +1082,22 @@ function toggleOtherNameInput(name, groupEl, otherInputEl) {
     groupEl.style.display = 'none';
     otherInputEl.value = '';
   }
+}
+
+function setFieldsEditable(fields, editable) {
+  fields.forEach(function(f) {
+    if (editable) {
+      f.removeAttribute('readonly');
+      f.style.backgroundColor = '#fff';
+      f.placeholder = 'Enter manually';
+      f.value = '';
+    } else {
+      f.setAttribute('readonly', true);
+      f.style.backgroundColor = '#d3d3d3';
+      f.placeholder = 'Auto-filled';
+      f.value = '';
+    }
+  });
 }
 
 // ----- Danger Section -----
@@ -885,7 +1111,12 @@ const dsHq = document.getElementById('ds_hq');
 
 setupAutocomplete(dsCrewName, dsCrewNameList, getAllCrewNames, function (name) {
   toggleOtherNameInput(name, dsCrewNameOtherGroup, dsCrewNameOther);
-  autoFillFromCrew(name, dsDesignation, dsHq, dsCrewCms);
+  if (name === 'OTHERS') {
+    setFieldsEditable([dsDesignation, dsHq, dsCrewCms], true);
+  } else {
+    setFieldsEditable([dsDesignation, dsHq, dsCrewCms], false);
+    autoFillFromCrew(name, dsDesignation, dsHq, dsCrewCms);
+  }
 });
 
 // ----- RS Section -----
@@ -904,11 +1135,21 @@ const rsAlpCms = document.getElementById('rs_alp_cms');
 
 setupAutocomplete(rsLpName, rsLpNameList, getAllCrewNames, function (name) {
   toggleOtherNameInput(name, rsLpNameOtherGroup, rsLpNameOther);
-  autoFillHqCms(name, rsLpHq, rsLpCms);
+  if (name === 'OTHERS') {
+    setFieldsEditable([rsLpHq, rsLpCms], true);
+  } else {
+    setFieldsEditable([rsLpHq, rsLpCms], false);
+    autoFillHqCms(name, rsLpHq, rsLpCms);
+  }
 });
 setupAutocomplete(rsAlpName, rsAlpNameList, getAllCrewNames, function (name) {
   toggleOtherNameInput(name, rsAlpNameOtherGroup, rsAlpNameOther);
-  autoFillHqCms(name, rsAlpHq, rsAlpCms);
+  if (name === 'OTHERS') {
+    setFieldsEditable([rsAlpHq, rsAlpCms], true);
+  } else {
+    setFieldsEditable([rsAlpHq, rsAlpCms], false);
+    autoFillHqCms(name, rsAlpHq, rsAlpCms);
+  }
 });
 
 // Fetch LP / ALP / Crew names live from the Google Sheet
