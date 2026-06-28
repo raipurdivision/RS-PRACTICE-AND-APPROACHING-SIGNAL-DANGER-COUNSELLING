@@ -5,6 +5,8 @@
 
 
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -158,6 +160,91 @@
   @media (max-width: 600px) {
     .form-grid { grid-template-columns: 1fr; }
   }
+  /* ===== LOBBY CREW TABLE ===== */
+  #ds_lobby_crew_table_wrap {
+    display: none;
+    grid-column: 1 / -1;
+    margin-top: 8px;
+  }
+  .crew-table-label {
+    font-weight: 700;
+    color: #003366;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  #ds_crew_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  #ds_crew_table thead tr {
+    background: #003366;
+    color: #fff;
+  }
+  #ds_crew_table th {
+    padding: 7px 8px;
+    text-align: left;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  #ds_crew_table td {
+    padding: 4px 5px;
+    border-bottom: 1px solid #d0d8e4;
+    vertical-align: middle;
+  }
+  #ds_crew_table tbody tr:nth-child(even) { background: #f0f5fb; }
+  #ds_crew_table tbody tr:hover { background: #ddeeff; }
+  .crew-name-cell { position: relative; min-width: 180px; }
+  .crew-name-cell input[type=text] {
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    padding: 5px 7px;
+    font-size: 13px;
+  }
+  .crew-name-cell .autocomplete-list {
+    font-size: 13px;
+    max-height: 160px;
+    z-index: 100;
+  }
+  .crew-auto-field {
+    background: #d3d3d3 !important;
+    color: #333;
+    font-size: 13px;
+    padding: 5px 7px;
+    border: 1px solid #b0b8c1;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 80px;
+  }
+  .crew-auto-field.editable {
+    background: #fff !important;
+  }
+  .btn-del-row {
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .btn-del-row:hover { background: #96281b; }
+  #btn_add_crew_row {
+    margin-top: 8px;
+    background: #1a6e1a;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 22px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  #btn_add_crew_row:hover { background: #145214; }
+  .sno-cell { text-align: center; font-weight: bold; color: #003366; min-width: 36px; }
 </style>
 </head>
 <body>
@@ -300,7 +387,8 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <!-- SINGLE CREW ENTRY — shown only for Place=Section -->
+      <div class="form-group" id="ds_single_crew_wrap">
         <label for="ds_crew_name">Crew Name</label>
         <div class="autocomplete-wrapper">
           <input type="text" id="ds_crew_name" name="ds_crew_name" placeholder="Loading crew list..." autocomplete="off" disabled>
@@ -313,19 +401,40 @@
         <input type="text" id="ds_crew_name_other" name="ds_crew_name_other" placeholder="Type crew name manually" autocomplete="off">
       </div>
 
-      <div class="form-group">
+      <div class="form-group" id="ds_single_desig_wrap">
         <label for="ds_designation">Designation</label>
         <input type="text" id="ds_designation" name="ds_designation" placeholder="Auto-filled" readonly>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" id="ds_single_cms_wrap">
         <label for="ds_crew_cms">Crew CMS ID</label>
         <input type="text" id="ds_crew_cms" name="ds_crew_cms" placeholder="Auto-filled" readonly>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" id="ds_single_hq_wrap">
         <label for="ds_hq">HQ</label>
         <input type="text" id="ds_hq" name="ds_hq" placeholder="Auto-filled" readonly>
+      </div>
+
+      <!-- MULTI-CREW TABLE — shown only for Place=Lobby -->
+      <div id="ds_lobby_crew_table_wrap">
+        <div class="crew-table-label">CREW LIST (LOBBY COUNSELLING)</div>
+        <table id="ds_crew_table">
+          <thead>
+            <tr>
+              <th class="sno-cell">S.NO</th>
+              <th style="min-width:180px;">CREW NAME</th>
+              <th>DESIGNATION</th>
+              <th>HQ</th>
+              <th>CMS ID</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="ds_crew_tbody">
+            <!-- rows added dynamically -->
+          </tbody>
+        </table>
+        <button type="button" id="btn_add_crew_row">+ ADD ROW</button>
       </div>
 
       <div class="form-group" id="ds_train_group">
@@ -581,21 +690,44 @@ const dsLocoGroup = document.getElementById('ds_loco_group');
 
 function updateDsPlace() {
   const val = dsPlace.value;
+  const singleWrap = document.getElementById('ds_single_crew_wrap');
+  const singleDesig = document.getElementById('ds_single_desig_wrap');
+  const singleCms = document.getElementById('ds_single_cms_wrap');
+  const singleHq = document.getElementById('ds_single_hq_wrap');
+  const tableWrap = document.getElementById('ds_lobby_crew_table_wrap');
+
   if (val === 'Lobby') {
     dsLobbyGroup.style.display = 'flex';
     dsSectionGroup.style.display = 'none';
     dsTrainGroup.style.display = 'none';
     dsLocoGroup.style.display = 'none';
+    // Hide single crew fields, show table
+    singleWrap.style.display = 'none';
+    singleDesig.style.display = 'none';
+    singleCms.style.display = 'none';
+    singleHq.style.display = 'none';
+    tableWrap.style.display = 'block';
+    if (document.getElementById('ds_crew_tbody').rows.length === 0) addCrewRow();
   } else if (val === 'Section') {
     dsLobbyGroup.style.display = 'none';
     dsSectionGroup.style.display = 'flex';
     dsTrainGroup.style.display = 'flex';
     dsLocoGroup.style.display = 'flex';
+    singleWrap.style.display = '';
+    singleDesig.style.display = '';
+    singleCms.style.display = '';
+    singleHq.style.display = '';
+    tableWrap.style.display = 'none';
   } else {
     dsLobbyGroup.style.display = 'none';
     dsSectionGroup.style.display = 'none';
     dsTrainGroup.style.display = 'flex';
     dsLocoGroup.style.display = 'flex';
+    singleWrap.style.display = '';
+    singleDesig.style.display = '';
+    singleCms.style.display = '';
+    singleHq.style.display = '';
+    tableWrap.style.display = 'none';
   }
 }
 
@@ -653,6 +785,14 @@ function validateForm() {
     if (dsPlace.value === 'Lobby') {
       const dsLobby = document.getElementById('ds_lobby');
       if (!dsLobby.value) { markError(dsLobby); valid = false; }
+      // Validate crew table has at least 1 complete row
+      const crewRows = getCrewTableRows();
+      if (crewRows.length === 0) {
+        const tbody = document.getElementById('ds_crew_tbody');
+        const banner2 = document.getElementById('validationErrorBanner');
+        banner2.textContent = '⚠️ PLEASE ADD AT LEAST ONE CREW ENTRY IN THE TABLE';
+        valid = false;
+      }
     }
 
     // Section text (only if Place = Section)
@@ -669,13 +809,15 @@ function validateForm() {
     const dsCliName = document.getElementById('ds_cli_name');
     if (!dsCliName.value) { markError(dsCliName); valid = false; }
 
-    // Crew Name (autocomplete)
+    // Crew Name (autocomplete) — only validate for Section/default mode
     const dsCrewNameEl = document.getElementById('ds_crew_name');
-    if (!dsCrewNameEl.value.trim() || dsCrewNameEl.disabled) {
-      markError(dsCrewNameEl); valid = false;
-    } else if (dsCrewNameEl.value.trim() === 'OTHERS') {
-      const dsCrewNameOtherEl = document.getElementById('ds_crew_name_other');
-      if (!dsCrewNameOtherEl.value.trim()) { markError(dsCrewNameOtherEl); valid = false; }
+    if (dsPlace.value !== 'Lobby') {
+      if (!dsCrewNameEl.value.trim() || dsCrewNameEl.disabled) {
+        markError(dsCrewNameEl); valid = false;
+      } else if (dsCrewNameEl.value.trim() === 'OTHERS') {
+        const dsCrewNameOtherEl = document.getElementById('ds_crew_name_other');
+        if (!dsCrewNameOtherEl.value.trim()) { markError(dsCrewNameOtherEl); valid = false; }
+      }
     }
   }
 
@@ -744,40 +886,11 @@ document.getElementById('rbdForm').addEventListener('submit', function(e){
 
   if (!validateForm()) return;
 
-  // Show "submitting" state immediately and lock the button to prevent double-submit
   submitMessage.style.display = 'none';
   submitErrorMessage.style.display = 'none';
   submittingMessage.style.display = 'block';
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitting...';
-
-  const formData = new FormData(this);
-  const data = {};
-  formData.forEach((value, key) => { data[key] = value; });
-
-  // If "OTHERS" was selected for a name field, submit the manually typed name instead
-  if (data['ds_crew_name'] === 'OTHERS' && data['ds_crew_name_other']) {
-    data['ds_crew_name'] = data['ds_crew_name_other'].trim();
-  }
-  if (data['rs_lp_name'] === 'OTHERS' && data['rs_lp_name_other']) {
-    data['rs_lp_name'] = data['rs_lp_name_other'].trim();
-  }
-  if (data['rs_alp_name'] === 'OTHERS' && data['rs_alp_name_other']) {
-    data['rs_alp_name'] = data['rs_alp_name_other'].trim();
-  }
-  delete data['ds_crew_name_other'];
-  delete data['rs_lp_name_other'];
-  delete data['rs_alp_name_other'];
-  const sectionVal = document.getElementById('section_selector').value;
-  const sectionLabelMap = { danger: 'APPROACHING DANGER COUNSELLING', rs: 'RS PRACTICE' };
-  const sheetNameMap = { danger: 'APPROACHING DANGER COUNSELLING', rs: 'RS PRACTICE' };
-  data['section_type'] = sectionLabelMap[sectionVal] || sectionVal;
-  data['section_selector'] = sectionLabelMap[sectionVal] || sectionVal;
-  data['target_sheet'] = sheetNameMap[sectionVal] || 'Sheet1';
-  const now = new Date();
-  const pad = (n) => String(n).padStart(2, '0');
-  data['submitted_at'] = pad(now.getDate()) + '/' + pad(now.getMonth() + 1) + '/' + now.getFullYear() +
-    ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
 
   if (GOOGLE_SHEET_SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
     alert('Google Sheet URL not configured yet. Please set GOOGLE_SHEET_SCRIPT_URL in the script.');
@@ -787,37 +900,115 @@ document.getElementById('rbdForm').addEventListener('submit', function(e){
     return;
   }
 
-  fetch(GOOGLE_SHEET_SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  })
-  .then(() => {
-    submittingMessage.style.display = 'none';
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Submit';
-    const msg = document.getElementById('submitMessage');
-    msg.style.display = 'block';
-    this.reset();
-    clearErrors();
-    document.getElementById('validationErrorBanner').style.display = 'none';
-    dsCrewNameOtherGroup.style.display = 'none';
-    rsLpNameOtherGroup.style.display = 'none';
-    rsAlpNameOtherGroup.style.display = 'none';
-    updateSections();
-    updateDsPlace();
-    setTimeout(() => { msg.style.display = 'none'; }, 4000);
-  })
-  .catch((err) => {
-    console.error(err);
-    submittingMessage.style.display = 'none';
-    submitErrorMessage.style.display = 'block';
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Submit';
-    setTimeout(() => { submitErrorMessage.style.display = 'none'; }, 5000);
-    alert('Error submitting form. Please check your internet connection or script URL.');
-  });
+  const formData = new FormData(this);
+  const baseData = {};
+  formData.forEach((value, key) => { baseData[key] = value; });
+
+  // Clean OTHERS manual overrides for RS section
+  if (baseData['rs_lp_name'] === 'OTHERS' && baseData['rs_lp_name_other']) {
+    baseData['rs_lp_name'] = baseData['rs_lp_name_other'].trim();
+  }
+  if (baseData['rs_alp_name'] === 'OTHERS' && baseData['rs_alp_name_other']) {
+    baseData['rs_alp_name'] = baseData['rs_alp_name_other'].trim();
+  }
+  delete baseData['ds_crew_name_other'];
+  delete baseData['rs_lp_name_other'];
+  delete baseData['rs_alp_name_other'];
+
+  const sectionVal = document.getElementById('section_selector').value;
+  const sectionLabelMap = { danger: 'APPROACHING DANGER COUNSELLING', rs: 'RS PRACTICE' };
+  const sheetNameMap  = { danger: 'APPROACHING DANGER COUNSELLING', rs: 'RS PRACTICE' };
+  baseData['section_type']     = sectionLabelMap[sectionVal] || sectionVal;
+  baseData['section_selector'] = sectionLabelMap[sectionVal] || sectionVal;
+  baseData['target_sheet']     = sheetNameMap[sectionVal]    || 'Sheet1';
+
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const submittedAt = pad(now.getDate()) + '/' + pad(now.getMonth()+1) + '/' + now.getFullYear() +
+    ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+  baseData['submitted_at'] = submittedAt;
+
+  // ---- Build list of payloads to send ----
+  const payloads = [];
+
+  if (baseData['ds_place'] === 'Lobby') {
+    // LOBBY MODE: one sheet row per crew table entry
+    const crewRows = getCrewTableRows();
+    crewRows.forEach(function(cr, i) {
+      const row = Object.assign({}, baseData);
+      row['ds_crew_name']  = cr.crew_name;
+      row['ds_designation']= cr.designation;
+      row['ds_hq']         = cr.hq;
+      row['ds_crew_cms']   = cr.cms_id;
+      row['ds_lobby_crew_sno']   = cr.sno;
+      row['ds_lobby_crew_total'] = crewRows.length;
+      payloads.push(row);
+    });
+  } else {
+    // SECTION MODE: single row, resolve OTHERS
+    if (baseData['ds_crew_name'] === 'OTHERS' && baseData['ds_crew_name_other']) {
+      baseData['ds_crew_name'] = baseData['ds_crew_name_other'].trim();
+    }
+    payloads.push(baseData);
+  }
+
+  // ---- Send payloads sequentially ----
+  const formEl = this;
+  let idx = 0;
+
+  function sendNext() {
+    if (idx >= payloads.length) {
+      // All done
+      submittingMessage.style.display = 'none';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
+      const msg = document.getElementById('submitMessage');
+      msg.textContent = payloads.length > 1
+        ? 'DATA SUBMITTED SUCCESSFULLY (' + payloads.length + ' ROWS)'
+        : 'DATA SUBMITTED SUCCESSFULLY';
+      msg.style.display = 'block';
+      formEl.reset();
+      clearErrors();
+      document.getElementById('validationErrorBanner').style.display = 'none';
+      document.getElementById('validationErrorBanner').textContent = '⚠️ PLEASE FILL ALL MANDATORY DETAILS BEFORE SUBMITTING';
+      dsCrewNameOtherGroup.style.display = 'none';
+      rsLpNameOtherGroup.style.display = 'none';
+      rsAlpNameOtherGroup.style.display = 'none';
+      document.getElementById('ds_crew_tbody').innerHTML = '';
+      crewRowCounter = 0;
+      updateSections();
+      updateDsPlace();
+      setTimeout(() => { msg.style.display = 'none'; }, 5000);
+      return;
+    }
+
+    // Update progress indicator
+    submittingMessage.textContent = payloads.length > 1
+      ? 'SUBMITTING ' + (idx+1) + ' OF ' + payloads.length + '... PLEASE WAIT'
+      : 'SUBMITTING... PLEASE WAIT';
+
+    fetch(GOOGLE_SHEET_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payloads[idx])
+    })
+    .then(function() {
+      idx++;
+      sendNext();
+    })
+    .catch(function(err) {
+      console.error(err);
+      submittingMessage.style.display = 'none';
+      submitErrorMessage.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
+      setTimeout(() => { submitErrorMessage.style.display = 'none'; }, 5000);
+      alert('Error submitting row ' + (idx+1) + '. Please check your internet connection or script URL.');
+    });
+  }
+
+  sendNext();
 });
 
 // ===== CREW DATA: fetched live from Google Sheet (RAIPUR DIVISION CREW) =====
@@ -896,6 +1087,7 @@ function handleCrewSheetResponse(response) {
       .filter(c => c.name);
 
     enableNameInputs();
+    enableCrewTableInputs();
   } catch (err) {
     showCrewLoadError(err.message);
   }
@@ -1151,6 +1343,156 @@ setupAutocomplete(rsAlpName, rsAlpNameList, getAllCrewNames, function (name) {
     autoFillHqCms(name, rsAlpHq, rsAlpCms);
   }
 });
+
+// ===== LOBBY CREW TABLE: multi-row add/delete with autocomplete =====
+let crewRowCounter = 0;
+
+function addCrewRow() {
+  const tbody = document.getElementById('ds_crew_tbody');
+  crewRowCounter++;
+  const idx = crewRowCounter;
+  const tr = document.createElement('tr');
+  tr.dataset.rowIdx = idx;
+
+  // S.No
+  const tdSno = document.createElement('td');
+  tdSno.className = 'sno-cell';
+  tdSno.textContent = tbody.rows.length + 1;
+  tr.appendChild(tdSno);
+
+  // Crew Name (autocomplete)
+  const tdName = document.createElement('td');
+  tdName.className = 'crew-name-cell';
+  const nameInput = document.createElement('input');
+  nameInput.type = 'text';
+  nameInput.placeholder = CREW_DATA.length ? 'Type to search...' : 'Loading...';
+  nameInput.autocomplete = 'off';
+  nameInput.disabled = !CREW_DATA.length;
+  const acList = document.createElement('div');
+  acList.className = 'autocomplete-list';
+  tdName.appendChild(nameInput);
+  tdName.appendChild(acList);
+  tr.appendChild(tdName);
+
+  // Designation
+  const tdDesig = document.createElement('td');
+  const desigInput = document.createElement('input');
+  desigInput.type = 'text';
+  desigInput.className = 'crew-auto-field';
+  desigInput.placeholder = 'Auto';
+  desigInput.readOnly = true;
+  tdDesig.appendChild(desigInput);
+  tr.appendChild(tdDesig);
+
+  // HQ
+  const tdHq = document.createElement('td');
+  const hqInput = document.createElement('input');
+  hqInput.type = 'text';
+  hqInput.className = 'crew-auto-field';
+  hqInput.placeholder = 'Auto';
+  hqInput.readOnly = true;
+  tdHq.appendChild(hqInput);
+  tr.appendChild(tdHq);
+
+  // CMS ID
+  const tdCms = document.createElement('td');
+  const cmsInput = document.createElement('input');
+  cmsInput.type = 'text';
+  cmsInput.className = 'crew-auto-field';
+  cmsInput.placeholder = 'Auto';
+  cmsInput.readOnly = true;
+  tdCms.appendChild(cmsInput);
+  tr.appendChild(tdCms);
+
+  // Delete button
+  const tdDel = document.createElement('td');
+  const delBtn = document.createElement('button');
+  delBtn.type = 'button';
+  delBtn.className = 'btn-del-row';
+  delBtn.textContent = '✕';
+  delBtn.title = 'Remove row';
+  delBtn.addEventListener('click', function() {
+    tr.remove();
+    renumberCrewRows();
+  });
+  tdDel.appendChild(delBtn);
+  tr.appendChild(tdDel);
+
+  tbody.appendChild(tr);
+
+  // Setup autocomplete for this row's name input
+  setupAutocomplete(nameInput, acList, getAllCrewNames, function(name) {
+    if (name === 'OTHERS') {
+      desigInput.readOnly = false;
+      hqInput.readOnly = false;
+      cmsInput.readOnly = false;
+      desigInput.classList.add('editable');
+      hqInput.classList.add('editable');
+      cmsInput.classList.add('editable');
+      desigInput.value = '';
+      hqInput.value = '';
+      cmsInput.value = '';
+      desigInput.placeholder = 'Enter manually';
+      hqInput.placeholder = 'Enter manually';
+      cmsInput.placeholder = 'Enter manually';
+    } else {
+      desigInput.readOnly = true;
+      hqInput.readOnly = true;
+      cmsInput.readOnly = true;
+      desigInput.classList.remove('editable');
+      hqInput.classList.remove('editable');
+      cmsInput.classList.remove('editable');
+      desigInput.placeholder = 'Auto';
+      hqInput.placeholder = 'Auto';
+      cmsInput.placeholder = 'Auto';
+      const crew = CREW_DATA.find(c => c.name === name);
+      if (crew) {
+        desigInput.value = crew.designation;
+        hqInput.value = crew.hq;
+        cmsInput.value = crew.cms;
+      } else {
+        desigInput.value = '';
+        hqInput.value = '';
+        cmsInput.value = '';
+      }
+    }
+  });
+
+  return tr;
+}
+
+function renumberCrewRows() {
+  const rows = document.getElementById('ds_crew_tbody').rows;
+  for (let i = 0; i < rows.length; i++) {
+    rows[i].cells[0].textContent = i + 1;
+  }
+}
+
+function enableCrewTableInputs() {
+  const inputs = document.querySelectorAll('#ds_crew_tbody input[type=text]:not(.crew-auto-field)');
+  inputs.forEach(inp => {
+    inp.disabled = false;
+    inp.placeholder = 'Type to search...';
+  });
+}
+
+document.getElementById('btn_add_crew_row').addEventListener('click', function() {
+  addCrewRow();
+});
+
+function getCrewTableRows() {
+  const rows = document.getElementById('ds_crew_tbody').rows;
+  const result = [];
+  for (let i = 0; i < rows.length; i++) {
+    const cells = rows[i].cells;
+    const name = cells[1].querySelector('input[type=text]').value.trim();
+    const desig = cells[2].querySelector('input').value.trim();
+    const hq = cells[3].querySelector('input').value.trim();
+    const cms = cells[4].querySelector('input').value.trim();
+    if (name) result.push({ sno: i + 1, crew_name: name, designation: desig, hq: hq, cms_id: cms });
+  }
+  return result;
+}
 
 // Fetch LP / ALP / Crew names live from the Google Sheet
 loadCrewData();
