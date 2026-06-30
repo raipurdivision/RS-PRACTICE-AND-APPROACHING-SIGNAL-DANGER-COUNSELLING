@@ -7,6 +7,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -342,7 +343,7 @@
 <option value="KHUSHAL SINGH/CLI/DRZ">KHUSHAL SINGH/CLI/DRZ</option>
 <option value="KAMLESH KUMAR RAJABHOJ/CLI/BIA">KAMLESH KUMAR RAJABHOJ/CLI/BIA</option>
 <option value="MAHESHWAR/CLI/BIA">MAHESHWAR/CLI/BIA</option>
-<option value="MANOJ KUMAR SAO/CLI/R">MANOJ KUMAR SAO/CLI/R</option>
+<option value="MANOJ KUMAR SAO/CLI/BIA">MANOJ KUMAR SAO/CLI/BIA</option>
 <option value="MANSUKH LAL CHANDRAKAR/CLI/R">MANSUKH LAL CHANDRAKAR/CLI/R</option>
 <option value="MOHIT KUMAR SWARNKAR/CLI/BIA">MOHIT KUMAR SWARNKAR/CLI/BIA</option>
 <option value="N. R. KARPAL/CLI/BIA">N. R. KARPAL/CLI/BIA</option>
@@ -408,7 +409,10 @@
 
       <div class="form-group" id="ds_single_cms_wrap">
         <label for="ds_crew_cms">Crew CMS ID</label>
-        <input type="text" id="ds_crew_cms" name="ds_crew_cms" placeholder="Auto-filled" readonly>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="ds_crew_cms" name="ds_crew_cms" placeholder="Auto-filled or type CMS ID to search" autocomplete="off">
+          <div class="autocomplete-list" id="ds_crew_cms_list"></div>
+        </div>
       </div>
 
       <div class="form-group" id="ds_single_hq_wrap">
@@ -520,7 +524,7 @@
 <option value="KHUSHAL SINGH/CLI/DRZ">KHUSHAL SINGH/CLI/DRZ</option>
 <option value="KAMLESH KUMAR RAJABHOJ/CLI/BIA">KAMLESH KUMAR RAJABHOJ/CLI/BIA</option>
 <option value="MAHESHWAR/CLI/BIA">MAHESHWAR/CLI/BIA</option>
-<option value="MANOJ KUMAR SAO/CLI/R">MANOJ KUMAR SAO/CLI/R</option>
+<option value="MANOJ KUMAR SAO/CLI/BIA">MANOJ KUMAR SAO/CLI/BIA</option>
 <option value="MANSUKH LAL CHANDRAKAR/CLI/R">MANSUKH LAL CHANDRAKAR/CLI/R</option>
 <option value="MOHIT KUMAR SWARNKAR/CLI/BIA">MOHIT KUMAR SWARNKAR/CLI/BIA</option>
 <option value="N. R. KARPAL/CLI/BIA">N. R. KARPAL/CLI/BIA</option>
@@ -598,7 +602,10 @@
 
       <div class="form-group">
         <label for="rs_lp_cms">LP CMS ID</label>
-        <input type="text" id="rs_lp_cms" name="rs_lp_cms" placeholder="Auto-filled" readonly>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="rs_lp_cms" name="rs_lp_cms" placeholder="Auto-filled or type CMS ID to search" autocomplete="off">
+          <div class="autocomplete-list" id="rs_lp_cms_list"></div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -608,7 +615,10 @@
 
       <div class="form-group">
         <label for="rs_alp_cms">ALP CMS ID</label>
-        <input type="text" id="rs_alp_cms" name="rs_alp_cms" placeholder="Auto-filled" readonly>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="rs_alp_cms" name="rs_alp_cms" placeholder="Auto-filled or type CMS ID to search" autocomplete="off">
+          <div class="autocomplete-list" id="rs_alp_cms_list"></div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -1124,6 +1134,15 @@ function getAllCrewNames() {
   return names;
 }
 
+function getAllCrewCms() {
+  const seen = new Set();
+  const list = [];
+  CREW_DATA.forEach(c => {
+    if (c.cms && !seen.has(c.cms)) { seen.add(c.cms); list.push(c); }
+  });
+  return list;
+}
+
 function autoFillFromCrew(name, designationField, hqField, cmsField) {
   const crew = CREW_DATA.find(c => c.name === name);
   if (crew) {
@@ -1224,6 +1243,82 @@ function setupAutocomplete(inputEl, listEl, getOptions, onSelect) {
   });
 }
 
+// ===== CMS ID -> NAME REVERSE LOOKUP (type CMS ID, pick name from list) =====
+function setupCmsAutocomplete(cmsInputEl, listEl, nameInputEl, onNamePicked) {
+  let activeIndex = -1;
+
+  function closeList() {
+    listEl.innerHTML = '';
+    listEl.style.display = 'none';
+    activeIndex = -1;
+  }
+
+  function setActive(items) {
+    items.forEach((it, i) => it.classList.toggle('active', i === activeIndex));
+    if (activeIndex > -1) items[activeIndex].scrollIntoView({ block: 'nearest' });
+  }
+
+  function pick(crew) {
+    cmsInputEl.value = crew.cms;
+    nameInputEl.value = crew.name;
+    closeList();
+    onNamePicked(crew.name);
+  }
+
+  function renderMatches(matches) {
+    listEl.innerHTML = '';
+    activeIndex = -1;
+    if (!matches.length) { closeList(); return; }
+    matches.forEach(crew => {
+      const item = document.createElement('div');
+      item.className = 'autocomplete-item';
+      item.textContent = crew.cms + ' \u2014 ' + crew.name;
+      item.addEventListener('mousedown', function (e) {
+        e.preventDefault();
+        pick(crew);
+      });
+      listEl.appendChild(item);
+    });
+    listEl.style.display = 'block';
+  }
+
+  function showMatches() {
+    const q = cmsInputEl.value.trim().toLowerCase();
+    if (!q) { closeList(); return; }
+    const matches = getAllCrewCms().filter(c => c.cms.toLowerCase().includes(q)).slice(0, 50);
+    renderMatches(matches);
+  }
+
+  cmsInputEl.addEventListener('input', showMatches);
+  cmsInputEl.addEventListener('focus', showMatches);
+
+  cmsInputEl.addEventListener('keydown', function (e) {
+    const items = listEl.querySelectorAll('.autocomplete-item');
+    if (!items.length) return;
+    const matches = getAllCrewCms().filter(c => c.cms.toLowerCase().includes(cmsInputEl.value.trim().toLowerCase())).slice(0, 50);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIndex = Math.min(activeIndex + 1, items.length - 1);
+      setActive(items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIndex = Math.max(activeIndex - 1, 0);
+      setActive(items);
+    } else if (e.key === 'Enter') {
+      if (activeIndex > -1 && matches[activeIndex]) {
+        e.preventDefault();
+        pick(matches[activeIndex]);
+      }
+    } else if (e.key === 'Escape') {
+      closeList();
+    }
+  });
+
+  cmsInputEl.addEventListener('blur', function () {
+    setTimeout(closeList, 150);
+  });
+}
+
 // ----- Link calendar date-picker icon to the DD/MM/YYYY text box -----
 function setupDatePicker(textInput, pickerInput) {
   pickerInput.addEventListener('change', function () {
@@ -1304,11 +1399,17 @@ const dsHq = document.getElementById('ds_hq');
 setupAutocomplete(dsCrewName, dsCrewNameList, getAllCrewNames, function (name) {
   toggleOtherNameInput(name, dsCrewNameOtherGroup, dsCrewNameOther);
   if (name === 'OTHERS') {
-    setFieldsEditable([dsDesignation, dsHq, dsCrewCms], true);
+    setFieldsEditable([dsDesignation, dsHq], true);
   } else {
-    setFieldsEditable([dsDesignation, dsHq, dsCrewCms], false);
+    setFieldsEditable([dsDesignation, dsHq], false);
     autoFillFromCrew(name, dsDesignation, dsHq, dsCrewCms);
   }
+});
+
+setupCmsAutocomplete(dsCrewCms, document.getElementById('ds_crew_cms_list'), dsCrewName, function (name) {
+  toggleOtherNameInput(name, dsCrewNameOtherGroup, dsCrewNameOther);
+  setFieldsEditable([dsDesignation, dsHq], false);
+  autoFillFromCrew(name, dsDesignation, dsHq, dsCrewCms);
 });
 
 // ----- RS Section -----
@@ -1328,20 +1429,32 @@ const rsAlpCms = document.getElementById('rs_alp_cms');
 setupAutocomplete(rsLpName, rsLpNameList, getAllCrewNames, function (name) {
   toggleOtherNameInput(name, rsLpNameOtherGroup, rsLpNameOther);
   if (name === 'OTHERS') {
-    setFieldsEditable([rsLpHq, rsLpCms], true);
+    setFieldsEditable([rsLpHq], true);
   } else {
-    setFieldsEditable([rsLpHq, rsLpCms], false);
+    setFieldsEditable([rsLpHq], false);
     autoFillHqCms(name, rsLpHq, rsLpCms);
   }
+});
+
+setupCmsAutocomplete(rsLpCms, document.getElementById('rs_lp_cms_list'), rsLpName, function (name) {
+  toggleOtherNameInput(name, rsLpNameOtherGroup, rsLpNameOther);
+  setFieldsEditable([rsLpHq], false);
+  autoFillHqCms(name, rsLpHq, rsLpCms);
 });
 setupAutocomplete(rsAlpName, rsAlpNameList, getAllCrewNames, function (name) {
   toggleOtherNameInput(name, rsAlpNameOtherGroup, rsAlpNameOther);
   if (name === 'OTHERS') {
-    setFieldsEditable([rsAlpHq, rsAlpCms], true);
+    setFieldsEditable([rsAlpHq], true);
   } else {
-    setFieldsEditable([rsAlpHq, rsAlpCms], false);
+    setFieldsEditable([rsAlpHq], false);
     autoFillHqCms(name, rsAlpHq, rsAlpCms);
   }
+});
+
+setupCmsAutocomplete(rsAlpCms, document.getElementById('rs_alp_cms_list'), rsAlpName, function (name) {
+  toggleOtherNameInput(name, rsAlpNameOtherGroup, rsAlpNameOther);
+  setFieldsEditable([rsAlpHq], false);
+  autoFillHqCms(name, rsAlpHq, rsAlpCms);
 });
 
 // ===== LOBBY CREW TABLE: multi-row add/delete with autocomplete =====
@@ -1396,12 +1509,16 @@ function addCrewRow() {
 
   // CMS ID
   const tdCms = document.createElement('td');
+  tdCms.className = 'crew-name-cell';
   const cmsInput = document.createElement('input');
   cmsInput.type = 'text';
-  cmsInput.className = 'crew-auto-field';
-  cmsInput.placeholder = 'Auto';
-  cmsInput.readOnly = true;
+  cmsInput.className = 'crew-auto-field editable';
+  cmsInput.placeholder = CREW_DATA.length ? 'Auto or type CMS ID...' : 'Loading...';
+  cmsInput.disabled = !CREW_DATA.length;
+  const cmsAcList = document.createElement('div');
+  cmsAcList.className = 'autocomplete-list';
   tdCms.appendChild(cmsInput);
+  tdCms.appendChild(cmsAcList);
   tr.appendChild(tdCms);
 
   // Delete button
@@ -1425,26 +1542,22 @@ function addCrewRow() {
     if (name === 'OTHERS') {
       desigInput.readOnly = false;
       hqInput.readOnly = false;
-      cmsInput.readOnly = false;
       desigInput.classList.add('editable');
       hqInput.classList.add('editable');
-      cmsInput.classList.add('editable');
       desigInput.value = '';
       hqInput.value = '';
       cmsInput.value = '';
       desigInput.placeholder = 'Enter manually';
       hqInput.placeholder = 'Enter manually';
-      cmsInput.placeholder = 'Enter manually';
+      cmsInput.placeholder = 'Enter manually or search CMS ID';
     } else {
       desigInput.readOnly = true;
       hqInput.readOnly = true;
-      cmsInput.readOnly = true;
       desigInput.classList.remove('editable');
       hqInput.classList.remove('editable');
-      cmsInput.classList.remove('editable');
       desigInput.placeholder = 'Auto';
       hqInput.placeholder = 'Auto';
-      cmsInput.placeholder = 'Auto';
+      cmsInput.placeholder = 'Auto or type CMS ID...';
       const crew = CREW_DATA.find(c => c.name === name);
       if (crew) {
         desigInput.value = crew.designation;
@@ -1455,6 +1568,22 @@ function addCrewRow() {
         hqInput.value = '';
         cmsInput.value = '';
       }
+    }
+  });
+
+  // Reverse lookup: type CMS ID in this row to pick a matching crew name
+  setupCmsAutocomplete(cmsInput, cmsAcList, nameInput, function(name) {
+    desigInput.readOnly = true;
+    hqInput.readOnly = true;
+    desigInput.classList.remove('editable');
+    hqInput.classList.remove('editable');
+    desigInput.placeholder = 'Auto';
+    hqInput.placeholder = 'Auto';
+    cmsInput.placeholder = 'Auto or type CMS ID...';
+    const crew = CREW_DATA.find(c => c.name === name);
+    if (crew) {
+      desigInput.value = crew.designation;
+      hqInput.value = crew.hq;
     }
   });
 
@@ -1473,6 +1602,11 @@ function enableCrewTableInputs() {
   inputs.forEach(inp => {
     inp.disabled = false;
     inp.placeholder = 'Type to search...';
+  });
+  const cmsInputs = document.querySelectorAll('#ds_crew_tbody input.crew-auto-field.editable');
+  cmsInputs.forEach(inp => {
+    inp.disabled = false;
+    if (!inp.value) inp.placeholder = 'Auto or type CMS ID...';
   });
 }
 
