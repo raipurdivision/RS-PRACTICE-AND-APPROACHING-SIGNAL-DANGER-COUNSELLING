@@ -1,0 +1,1664 @@
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Railway Board Drive - Counselling Form</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #000000;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 2px solid #003366;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .header {
+    background: #003366;
+    color: #fff;
+    text-align: center;
+    padding: 18px 10px;
+  }
+  .header h1 {
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: 1px;
+  }
+  .header h2 {
+    margin: 6px 0 0;
+    font-size: 15px;
+    font-weight: bold;
+    color: #FFD700;
+  }
+  .header h3 {
+    margin: 4px 0 0;
+    font-size: 14px;
+    font-weight: bold;
+    color: #FFD700;
+  }
+  form {
+    padding: 20px 30px 30px;
+  }
+  .section-title {
+    background: #e6eef5;
+    color: #003366;
+    font-weight: bold;
+    padding: 10px 14px;
+    margin: 25px 0 15px;
+    border-left: 5px solid #003366;
+    font-size: 16px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 25px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #222;
+    font-size: 14px;
+  }
+  input, select, textarea {
+    padding: 8px 10px;
+    border: 1px solid #b0b8c1;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #d3d3d3;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #003366;
+    box-shadow: 0 0 4px rgba(0,51,102,0.3);
+  }
+  .field-error {
+    border-color: #cc0000 !important;
+    background-color: #fff0f0 !important;
+    box-shadow: 0 0 4px rgba(204,0,0,0.3) !important;
+  }
+  .error-msg {
+    color: #cc0000;
+    font-size: 12px;
+    margin-top: 3px;
+    display: none;
+  }
+  .full-width {
+    grid-column: 1 / -1;
+  }
+  .autocomplete-wrapper {
+    position: relative;
+  }
+  .autocomplete-wrapper input {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #fff;
+  }
+  .autocomplete-wrapper input:disabled {
+    background-color: #e9ecef;
+    color: #777;
+    cursor: not-allowed;
+  }
+  .autocomplete-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #b0b8c1;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    z-index: 50;
+  }
+  .autocomplete-item {
+    padding: 8px 10px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .autocomplete-item:hover,
+  .autocomplete-item.active {
+    background: #e6eef5;
+    color: #003366;
+  }
+  .submit-row {
+    text-align: center;
+    margin-top: 30px;
+  }
+  button {
+    background: #003366;
+    color: #fff;
+    border: none;
+    padding: 12px 40px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #00509e;
+  }
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+  }
+  /* ===== LOBBY CREW TABLE ===== */
+  #ds_lobby_crew_table_wrap {
+    display: none;
+    grid-column: 1 / -1;
+    margin-top: 8px;
+  }
+  .crew-table-label {
+    font-weight: 700;
+    color: #003366;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  #ds_crew_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  #ds_crew_table thead tr {
+    background: #003366;
+    color: #fff;
+  }
+  #ds_crew_table th {
+    padding: 7px 8px;
+    text-align: left;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  #ds_crew_table td {
+    padding: 4px 5px;
+    border-bottom: 1px solid #d0d8e4;
+    vertical-align: middle;
+  }
+  #ds_crew_table tbody tr:nth-child(even) { background: #f0f5fb; }
+  #ds_crew_table tbody tr:hover { background: #ddeeff; }
+  .crew-name-cell { position: relative; min-width: 180px; }
+  .crew-name-cell input[type=text] {
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    padding: 5px 7px;
+    font-size: 13px;
+  }
+  .crew-name-cell .autocomplete-list {
+    font-size: 13px;
+    max-height: 160px;
+    z-index: 100;
+  }
+  .crew-auto-field {
+    background: #d3d3d3 !important;
+    color: #333;
+    font-size: 13px;
+    padding: 5px 7px;
+    border: 1px solid #b0b8c1;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 80px;
+  }
+  .crew-auto-field.editable {
+    background: #fff !important;
+  }
+  .btn-del-row {
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .btn-del-row:hover { background: #96281b; }
+  #btn_add_crew_row {
+    margin-top: 8px;
+    background: #1a6e1a;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 22px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  #btn_add_crew_row:hover { background: #145214; }
+  .sno-cell { text-align: center; font-weight: bold; color: #003366; min-width: 36px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>RAILWAY BOARD DRIVE</h1>
+    <h2>APPROACHING DANGER SIGNAL COUNSELLING / RS APPLICATION PRACTICE</h2>
+    <h3>RAIPUR DIVISION</h3>
+  </div>
+
+  <form id="rbdForm">
+
+    <div class="form-group full-width" style="margin-bottom:10px;">
+      <label for="section_selector">Select Drive</label>
+      <select id="section_selector" name="section_selector">
+        <option value="">-- Select --</option>
+        <option value="danger">APPROACHING DANGER SIGNAL COUNSELLING</option>
+        <option value="rs">RS APPLICATION PRACTICE</option>
+      </select>
+    </div>
+
+    <!-- SECTION 1: DANGER SIGNAL APPROACHING COUNSELLING -->
+    <div id="dangerSection">
+    <div class="section-title">1. DANGER SIGNAL APPROACHING COUNSELLING</div>
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label for="ds_date">Date</label>
+        <div style="position:relative;">
+          <input type="text" id="ds_date" name="ds_date" placeholder="DD/MM/YYYY" maxlength="10" style="width:100%; box-sizing:border-box; padding-right:36px;">
+          <input type="date" id="ds_date_picker" style="position:absolute; right:6px; top:50%; transform:translateY(-50%); width:24px; height:24px; padding:0; border:none; background:transparent; cursor:pointer;">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="ds_time">Time</label>
+        <input type="text" id="ds_time" name="ds_time" placeholder="HH:MM">
+      </div>
+
+      <div class="form-group">
+        <label for="ds_place">Place</label>
+        <select id="ds_place" name="ds_place">
+          <option value="">-- Select Place --</option>
+          <option value="Lobby">Lobby</option>
+          <option value="Section">Section</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="ds_lobby_group">
+        <label for="ds_lobby">Select Lobby</label>
+        <select id="ds_lobby" name="ds_lobby">
+          <option value="">-- Select Lobby --</option>
+          <option value="DBEC">DBEC</option>
+          <option value="DURG">DURG</option>
+          <option value="RAIPUR">RAIPUR</option>
+          <option value="BYT">BYT</option>
+          <option value="DRZ">DRZ</option>
+          <option value="RSD">RSD</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="ds_cli_name">CLI Name</label>
+        <select id="ds_cli_name" name="ds_cli_name">
+          <option value="">-- Select CLI Name --</option>
+          <option value="A K REDDY/CLI/BIA">A K REDDY/CLI/R</option>
+<option value="A.R.TARAM/CLI/BIA">A.R. TARAM/CLI/BIA</option>
+<option value="ABDUL MOIN KHAN/CLI/BIA">ABDUL MOIN KHAN/CLI/BIA</option>
+<option value="AKHILESH KUMAR/CLI/BIA">AKHILESH KUMAR/CLI/BIA</option>
+<option value="AMIT KUMAR BANKURE/CLI/BYT">AMIT KUMAR BANKURE/CLI/BYT</option>
+<option value="ANANT PRAKASH SHRIVASTAVA/CLI/BIA">ANANT PRAKASH SHRIVASTAVA/CLI/BIA</option>
+<option value="ANIL KUMAR/CLI/BIA">ANIL KUMAR/CLI/BIA</option>
+<option value="ANKIT RAM KANT/CLI/BIA">ANKIT RAM KANT/CLI/BIA</option>
+<option value="AVON KUMAR SAHU/CLI/R">AVON KUMAR SAHU/CLI/R</option>
+<option value="ASHISH WANJARI/CLI/BYT">ASHISH WANJARI/CLI/BYT</option>
+<option value="B B KUSHWAHA/CLI/BIA">B B KUSHWAHA/CLI/BIA</option>
+<option value="B K HARMUKH/CLI/BIA">B K HARMUKH/CLI/BIA</option>
+<option value="B. K. SAHA/CLI/BIA">B. K. SAHA/CLI/BIA</option>
+<option value="B.K.SONI/CLI/BIA">B.K.SONI/CLI/BIA</option>
+<option value="BHARAT SINGH ATBHAIYYA/CLI/R">BHARAT SINGH ATBHAIYYA/CLI/R</option>
+<option value="BHOLI CHAUDHARY/CLI/R">BHOLI CHAUDHARY/CLI/R</option>
+<option value="BIKRAMJIT KANRAR/CLI/BIA">BIKRAMJIT KANRAR/CLI/BIA</option>
+<option value="BINOD KUMAR RAM/CLI/R">BINOD KUMAR RAM/CLI/R</option>
+<option value="CLI NAME/CLI/BIA">CLI NAME/CLI/BIA</option>
+<option value="DEEPANNITA PUNTAMBEKAR/CLI/BIA">DEEPANNITA PUNTAMBEKAR/CLI/BIA</option>
+<option value="DILLI RAO/CLI/BYT">DILLI RAO/CLI/BYT</option>
+<option value="G. C. BISWAS/CLI/R">G. C. BISWAS/CLI/R</option>
+<option value="G. V. R. K. MADHU/CLI/BIA">G. V. R. K. MADHU/CLI/BIA</option>
+<option value="GIRDHARI LAL/CLI/R">GIRDHARI LAL/CLI/R</option>
+<option value="JAISHANKAR SHARMA/CLI/BIA">JAISHANKAR SHARMA/CLI/BIA</option>
+<option value="JITENDRA KUMAR MISHRA/CLI/BYT">JITENDRA KUMAR MISHRA/CLI/BYT</option>
+<option value="K P LAHARE/CLI/R">K P LAHRE/CLI/BIA</option>
+<option value="K P HIRWANI/CLI/BYT">K P HIRWANI/CLI/BYT</option>
+<option value="K. K. SAHU/CLI/BIA">K. K. SAHU/CLI/BIA</option>
+<option value="KHUSHAL SINGH/CLI/DRZ">KHUSHAL SINGH/CLI/DRZ</option>
+<option value="KAMLESH KUMAR RAJABHOJ/CLI/BIA">KAMLESH KUMAR RAJABHOJ/CLI/BIA</option>
+<option value="MAHESHWAR/CLI/BIA">MAHESHWAR/CLI/BIA</option>
+<option value="MANOJ KUMAR SAO/CLI/BIA">MANOJ KUMAR SAO/CLI/BIA</option>
+<option value="MANSUKH LAL CHANDRAKAR/CLI/R">MANSUKH LAL CHANDRAKAR/CLI/R</option>
+<option value="MOHIT KUMAR SWARNKAR/CLI/BIA">MOHIT KUMAR SWARNKAR/CLI/BIA</option>
+<option value="N. R. KARPAL/CLI/BIA">N. R. KARPAL/CLI/BIA</option>
+<option value="N.K. BHOI/CLI/R">N.K. BHOI/CLI/R</option>
+<option value="NITIN KUKDE/CLI/BYT">NITIN KUKDE/CLI/BYT</option>
+<option value="NIRMAL KUMAR/CLI/BYT">NIRMAL KUMAR/CLI/BYT</option>
+<option value="P.K. PATEL/CLI/BIA">P.K. PATEL/CLI/BIA</option>
+<option value="PANKAJ KUMAR SINGH/CLI/BIA">PANKAJ KUMAR SINGH/CLI/BIA</option>
+<option value="PAWAN KUMAR SINGH/CLI/BIA">PAWAN KUMAR SINGH/CLI/BIA
+<option value="PURAN LAL PATEL/CLI/BYT">PURAN LAL PATEL/CLI/BYT</option>
+<option value="RAJENDRA KUMAR/CLI/BIA">RAJENDRA KUMAR/CLI/BIA</option>
+<option value="RAJENDRA SINGH/CLI/BIA">RAJENDRA SINGH/CLI/BIA</option>
+<option value="PALAK RAM ALENDRA/CLI/DRZ">PALAK RAM ALENDRA/CLI/DRZ</option>
+<option value="RAJESH KUMAR DESHMUKH/CLI/R">RAJESH KUMAR DESHMUKH/CLI/R</option>
+<option value="RAJNEESH BENERJEE/CLI/BIA">RAJNEESH BENERJEE/CLI/BIA</option>
+<option value="RANJEET SINGH/CLI/BYT">RANJEET SINGH/CLI/BYT</option>
+<option value="RAKESH KUMAR KOSTA/CLI/DRZ">RAKESH KUMAR KOSTA/CLI/DRZ</option>
+<option value="RAJESH KUMAR DESHMUKH/CLI/R/CLI/DRZ">RAJESH KUMAR DESHMUKH/CLI/R</option>
+<option value="S K GAUTAM/CLI/BIA">S K GAUTAM/CLI/BIA</option>
+<option value="S S HUSSAIN/CLI/BIA">S S HUSSAIN/CLI/BIA</option>
+<option value="S. C. RAI/CLI/BIA">S. C. RAI/CLI/BIA</option>
+<option value="S. K. SINGH/CLI/BIA">S. K. SINGH/CLI/BIA</option>
+<option value="S. L. SONI/CLI/R">S. L. SONI/CLI/R</option>
+<option value="SANJAY KUMAR ROY/CLI/BIA">SANJAY KUMAR ROY/CLI/BIA</option>
+<option value="SANJAY SINGH/CLI/DRZ">SANJAY SINGH/CLI/DRZ</option>
+<option value="SANJEEV KUMAR SHARMA/CLI/BIA">SANJEEV KUMAR SHARMA/CLI/BIA</option>
+<option value="SANTOSH KUAMAR PATKAR/CLI/BIA">SANTOSH KUAMAR PATKAR/CLI/BIA</option>
+<option value="SHAILENDRA SINGH/CLI/BIA">SHAILENDRA SINGH/CLI/BIA</option>
+<option value="SUNDEEP KUMAR SHARMA/CLI/BIA">SUNDEEP KUMAR SHARMA/CLI/BIA</option>
+<option value="SUNIL KUMAR DEWANGAN/CLI/BIA">SUNIL KUMAR DEWANGAN/CLI/BIA</option>
+<option value="SURENDRA KUMAR SONI/CLI/BYT">SURENDRA KUMAR SONI/CLI/BYT</option>
+<option value="SATYENDRA KUMAR/CLI/DRZ">SATYENDRA KUMAR/CLI/DRZ</option>
+<option value="SANAT KUMAR SAHU/CLI/DRZ">SANAT KUMAR SAHU/CLI/DRZ</option>
+<option value="TEST ID/CLI/BIA">TEST ID/CLI/BIA</option>
+<option value="V.K. BHAGAT/CLI/R">V.K. BHAGAT/CLI/R</option>
+<option value="VIJAY KUMAR ARYA/CLI/BIA">VIJAY KUMAR ARYA/CLI/BIA</option>
+<option value="VIKAS SHENDE/CLI/R">VIKAS SHENDE/CLI/R</option>
+<option value="VINAY KUMAR VINCHURE/CLI/BIA">VINAY KUMAR VINCHURE/CLI/BIA</option>
+<option value="VINAY PANTAWANE/CLI/BIA">VINAY PANTAWANE/CLI/BIA</option>
+<option value="Y. RAMU/CLI/BIA">Y. RAMU/CLI/BIA</option>
+<option value="YOGESH KUMAR MIHAULIA/CLI/BIA">YOGESH KUMAR MIHAULIA/CLI/BIA</option>
+<option value="OTHERS">OTHERS</option>
+        </select>
+      </div>
+
+      <!-- SINGLE CREW ENTRY — shown only for Place=Section -->
+      <div class="form-group" id="ds_single_crew_wrap">
+        <label for="ds_crew_name">Crew Name</label>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="ds_crew_name" name="ds_crew_name" placeholder="Loading crew list..." autocomplete="off" disabled>
+          <div class="autocomplete-list" id="ds_crew_name_list"></div>
+        </div>
+      </div>
+
+      <div class="form-group" id="ds_crew_name_other_group" style="display:none;">
+        <label for="ds_crew_name_other">Enter Crew Name (Manual)</label>
+        <input type="text" id="ds_crew_name_other" name="ds_crew_name_other" placeholder="Type crew name manually" autocomplete="off">
+      </div>
+
+      <div class="form-group" id="ds_single_desig_wrap">
+        <label for="ds_designation">Designation</label>
+        <input type="text" id="ds_designation" name="ds_designation" placeholder="Auto-filled" readonly>
+      </div>
+
+      <div class="form-group" id="ds_single_cms_wrap">
+        <label for="ds_crew_cms">Crew CMS ID</label>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="ds_crew_cms" name="ds_crew_cms" placeholder="Auto-filled or type CMS ID to search" autocomplete="off">
+          <div class="autocomplete-list" id="ds_crew_cms_list"></div>
+        </div>
+      </div>
+
+      <div class="form-group" id="ds_single_hq_wrap">
+        <label for="ds_hq">HQ</label>
+        <input type="text" id="ds_hq" name="ds_hq" placeholder="Auto-filled" readonly>
+      </div>
+
+      <!-- MULTI-CREW TABLE — shown only for Place=Lobby -->
+      <div id="ds_lobby_crew_table_wrap">
+        <div class="crew-table-label">CREW LIST (LOBBY COUNSELLING)</div>
+        <table id="ds_crew_table">
+          <thead>
+            <tr>
+              <th class="sno-cell">S.NO</th>
+              <th style="min-width:180px;">CREW NAME</th>
+              <th>DESIGNATION</th>
+              <th>HQ</th>
+              <th>CMS ID</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="ds_crew_tbody">
+            <!-- rows added dynamically -->
+          </tbody>
+        </table>
+        <button type="button" id="btn_add_crew_row">+ ADD ROW</button>
+      </div>
+
+      <div class="form-group" id="ds_train_group">
+        <label for="ds_train_no">Train No</label>
+        <input type="text" id="ds_train_no" name="ds_train_no" placeholder="Enter Train No">
+      </div>
+
+      <div class="form-group" id="ds_loco_group">
+        <label for="ds_loco_no">Loco No</label>
+        <input type="text" id="ds_loco_no" name="ds_loco_no" placeholder="Enter Loco No">
+      </div>
+
+      <div class="form-group" id="ds_section_group">
+        <label for="ds_section">Section</label>
+        <input type="text" id="ds_section" name="ds_section" placeholder="Enter Section manually" autocomplete="off">
+      </div>
+
+      <div class="form-group full-width">
+        <label for="ds_remarks">Remarks if any</label>
+        <textarea id="ds_remarks" name="ds_remarks" rows="3" placeholder="Enter counselling remarks"></textarea>
+      </div>
+
+    </div>
+    </div>
+    <!-- END SECTION 1 -->
+
+    <!-- SECTION 2: RS HOLDING PRACTICE / APPLICATION PRACTICE -->
+    <div id="rsSection">
+    <div class="section-title">2. RS APPLICATION PRACTICE</div>
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label for="rs_date">Date</label>
+        <div style="position:relative;">
+          <input type="text" id="rs_date" name="rs_date" placeholder="DD/MM/YYYY" maxlength="10" style="width:100%; box-sizing:border-box; padding-right:36px;">
+          <input type="date" id="rs_date_picker" style="position:absolute; right:6px; top:50%; transform:translateY(-50%); width:24px; height:24px; padding:0; border:none; background:transparent; cursor:pointer;">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="rs_time">Time</label>
+        <input type="text" id="rs_time" name="rs_time" placeholder="HH:MM">
+      </div>
+
+      <div class="form-group">
+        <label for="rs_signal">Signal Name/No</label>
+        <input type="text" id="rs_signal" name="rs_signal" placeholder="Enter Signal Name/No">
+      </div>
+
+      <div class="form-group">
+        <label for="rs_cli_name">CLI Name</label>
+        <select id="rs_cli_name" name="rs_cli_name">
+          <option value="">-- Select CLI Name --</option>
+          <option value="A K REDDY/CLI/BIA">A K REDDY/CLI/R</option>
+<option value="A.R.TARAM/CLI/BIA">A.R. TARAM/CLI/BIA</option>
+<option value="ABDUL MOIN KHAN/CLI/BIA">ABDUL MOIN KHAN/CLI/BIA</option>
+<option value="AKHILESH KUMAR/CLI/BIA">AKHILESH KUMAR/CLI/BIA</option>
+<option value="AMIT KUMAR BANKURE/CLI/BYT">AMIT KUMAR BANKURE/CLI/BYT</option>
+<option value="ANANT PRAKASH SHRIVASTAVA/CLI/BIA">ANANT PRAKASH SHRIVASTAVA/CLI/BIA</option>
+<option value="ANIL KUMAR/CLI/BIA">ANIL KUMAR/CLI/BIA</option>
+<option value="ANKIT RAM KANT/CLI/BIA">ANKIT RAM KANT/CLI/BIA</option>
+<option value="AVON KUMAR SAHU/CLI/R">AVON KUMAR SAHU/CLI/R</option>
+<option value="ASHISH WANJARI/CLI/BYT">ASHISH WANJARI/CLI/BYT</option>
+<option value="B B KUSHWAHA/CLI/BIA">B B KUSHWAHA/CLI/BIA</option>
+<option value="B K HARMUKH/CLI/BIA">B K HARMUKH/CLI/BIA</option>
+<option value="B. K. SAHA/CLI/BIA">B. K. SAHA/CLI/BIA</option>
+<option value="B.K.SONI/CLI/BIA">B.K.SONI/CLI/BIA</option>
+<option value="BHARAT SINGH ATBHAIYYA/CLI/R">BHARAT SINGH ATBHAIYYA/CLI/R</option>
+<option value="BHOLI CHAUDHARY/CLI/R">BHOLI CHAUDHARY/CLI/R</option>
+<option value="BIKRAMJIT KANRAR/CLI/BIA">BIKRAMJIT KANRAR/CLI/BIA</option>
+<option value="BINOD KUMAR RAM/CLI/R">BINOD KUMAR RAM/CLI/R</option>
+<option value="CLI NAME/CLI/BIA">CLI NAME/CLI/BIA</option>
+<option value="DEEPANNITA PUNTAMBEKAR/CLI/BIA">DEEPANNITA PUNTAMBEKAR/CLI/BIA</option>
+<option value="DILLI RAO/CLI/BYT">DILLI RAO/CLI/BYT</option>
+<option value="G. C. BISWAS/CLI/R">G. C. BISWAS/CLI/R</option>
+<option value="G. V. R. K. MADHU/CLI/BIA">G. V. R. K. MADHU/CLI/BIA</option>
+<option value="GIRDHARI LAL/CLI/R">GIRDHARI LAL/CLI/R</option>
+<option value="JAISHANKAR SHARMA/CLI/BIA">JAISHANKAR SHARMA/CLI/BIA</option>
+<option value="JITENDRA KUMAR MISHRA/CLI/BYT">JITENDRA KUMAR MISHRA/CLI/BYT</option>
+<option value="K P LAHARE/CLI/R">K P LAHRE/CLI/BIA</option>
+<option value="K P HIRWANI/CLI/BYT">K P HIRWANI/CLI/BYT</option>
+<option value="K. K. SAHU/CLI/BIA">K. K. SAHU/CLI/BIA</option>
+<option value="KHUSHAL SINGH/CLI/DRZ">KHUSHAL SINGH/CLI/DRZ</option>
+<option value="KAMLESH KUMAR RAJABHOJ/CLI/BIA">KAMLESH KUMAR RAJABHOJ/CLI/BIA</option>
+<option value="MAHESHWAR/CLI/BIA">MAHESHWAR/CLI/BIA</option>
+<option value="MANOJ KUMAR SAO/CLI/BIA">MANOJ KUMAR SAO/CLI/BIA</option>
+<option value="MANSUKH LAL CHANDRAKAR/CLI/R">MANSUKH LAL CHANDRAKAR/CLI/R</option>
+<option value="MOHIT KUMAR SWARNKAR/CLI/BIA">MOHIT KUMAR SWARNKAR/CLI/BIA</option>
+<option value="N. R. KARPAL/CLI/BIA">N. R. KARPAL/CLI/BIA</option>
+<option value="N.K. BHOI/CLI/R">N.K. BHOI/CLI/R</option>
+<option value="NITIN KUKDE/CLI/BYT">NITIN KUKDE/CLI/BYT</option>
+<option value="NIRMAL KUMAR/CLI/BYT">NIRMAL KUMAR/CLI/BYT</option>
+<option value="P.K. PATEL/CLI/BIA">P.K. PATEL/CLI/BIA</option>
+<option value="PANKAJ KUMAR SINGH/CLI/BIA">PANKAJ KUMAR SINGH/CLI/BIA</option>
+<option value="PAWAN KUMAR SINGH/CLI/BIA">PAWAN KUMAR SINGH/CLI/BIA
+<option value="PURAN LAL PATEL/CLI/BYT">PURAN LAL PATEL/CLI/BYT</option>
+<option value="RAJENDRA KUMAR/CLI/BIA">RAJENDRA KUMAR/CLI/BIA</option>
+<option value="PALAK RAM ALENDRA/CLI/DRZ">PALAK RAM ALENDRA/CLI/DRZ</option>
+<option value="RAJESH KUMAR DESHMUKH/CLI/R">RAJESH KUMAR DESHMUKH/CLI/R</option>
+<option value="RAJNEESH BENERJEE/CLI/BIA">RAJNEESH BENERJEE/CLI/BIA</option>
+<option value="RANJEET SINGH/CLI/BYT">RANJEET SINGH/CLI/BYT</option>
+<option value="RAKESH KUMAR KOSTA/CLI/DRZ">RAKESH KUMAR KOSTA/CLI/DRZ</option>
+<option value="RAJESH KUMAR DESHMUKH/CLI/R/CLI/DRZ">RAJESH KUMAR DESHMUKH/CLI/R</option>
+<option value="S K GAUTAM/CLI/BIA">S K GAUTAM/CLI/BIA</option>
+<option value="S S HUSSAIN/CLI/BIA">S S HUSSAIN/CLI/BIA</option>
+<option value="S. C. RAI/CLI/BIA">S. C. RAI/CLI/BIA</option>
+<option value="S. K. SINGH/CLI/BIA">S. K. SINGH/CLI/BIA</option>
+<option value="S. L. SONI/CLI/R">S. L. SONI/CLI/R</option>
+<option value="SANJAY KUMAR ROY/CLI/BIA">SANJAY KUMAR ROY/CLI/BIA</option>
+<option value="SANJAY SINGH/CLI/DRZ">SANJAY SINGH/CLI/DRZ</option>
+<option value="SANJEEV KUMAR SHARMA/CLI/BIA">SANJEEV KUMAR SHARMA/CLI/BIA</option>
+<option value="SANTOSH KUAMAR PATKAR/CLI/BIA">SANTOSH KUAMAR PATKAR/CLI/BIA</option>
+<option value="SHAILENDRA SINGH/CLI/BIA">SHAILENDRA SINGH/CLI/BIA</option>
+<option value="SUNDEEP KUMAR SHARMA/CLI/BIA">SUNDEEP KUMAR SHARMA/CLI/BIA</option>
+<option value="SUNIL KUMAR DEWANGAN/CLI/BIA">SUNIL KUMAR DEWANGAN/CLI/BIA</option>
+<option value="SURENDRA KUMAR SONI/CLI/BYT">SURENDRA KUMAR SONI/CLI/BYT</option>
+<option value="SATYENDRA KUMAR/CLI/DRZ">SATYENDRA KUMAR/CLI/DRZ</option>
+<option value="SANAT KUMAR SAHU/CLI/DRZ">SANAT KUMAR SAHU/CLI/DRZ</option>
+<option value="TEST ID/CLI/BIA">TEST ID/CLI/BIA</option>
+<option value="V.K. BHAGAT/CLI/R">V.K. BHAGAT/CLI/R</option>
+<option value="VIJAY KUMAR ARYA/CLI/BIA">VIJAY KUMAR ARYA/CLI/BIA</option>
+<option value="VIKAS SHENDE/CLI/R">VIKAS SHENDE/CLI/R</option>
+<option value="VINAY KUMAR VINCHURE/CLI/BIA">VINAY KUMAR VINCHURE/CLI/BIA</option>
+<option value="VINAY PANTAWANE/CLI/BIA">VINAY PANTAWANE/CLI/BIA</option>
+<option value="Y. RAMU/CLI/BIA">Y. RAMU/CLI/BIA</option>
+<option value="YOGESH KUMAR MIHAULIA/CLI/BIA">YOGESH KUMAR MIHAULIA/CLI/BIA</option>
+<option value="OTHERS">OTHERS</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="rs_lp_name">LP Name</label>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="rs_lp_name" name="rs_lp_name" placeholder="Loading LP list..." autocomplete="off" disabled>
+          <div class="autocomplete-list" id="rs_lp_name_list"></div>
+        </div>
+      </div>
+
+      <div class="form-group" id="rs_lp_name_other_group" style="display:none;">
+        <label for="rs_lp_name_other">Enter LP Name (Manual)</label>
+        <input type="text" id="rs_lp_name_other" name="rs_lp_name_other" placeholder="Type LP name manually" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="rs_alp_name">ALP Name</label>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="rs_alp_name" name="rs_alp_name" placeholder="Loading ALP list..." autocomplete="off" disabled>
+          <div class="autocomplete-list" id="rs_alp_name_list"></div>
+        </div>
+      </div>
+
+      <div class="form-group" id="rs_alp_name_other_group" style="display:none;">
+        <label for="rs_alp_name_other">Enter ALP Name (Manual)</label>
+        <input type="text" id="rs_alp_name_other" name="rs_alp_name_other" placeholder="Type ALP name manually" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="rs_lp_hq">LP HQ</label>
+        <input type="text" id="rs_lp_hq" name="rs_lp_hq" placeholder="Auto-filled" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="rs_lp_cms">LP CMS ID</label>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="rs_lp_cms" name="rs_lp_cms" placeholder="Auto-filled or type CMS ID to search" autocomplete="off">
+          <div class="autocomplete-list" id="rs_lp_cms_list"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="rs_alp_hq">ALP HQ</label>
+        <input type="text" id="rs_alp_hq" name="rs_alp_hq" placeholder="Auto-filled" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="rs_alp_cms">ALP CMS ID</label>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="rs_alp_cms" name="rs_alp_cms" placeholder="Auto-filled or type CMS ID to search" autocomplete="off">
+          <div class="autocomplete-list" id="rs_alp_cms_list"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="rs_train_no">Train No</label>
+        <input type="text" id="rs_train_no" name="rs_train_no" placeholder="Enter Train No">
+      </div>
+
+      <div class="form-group">
+        <label for="rs_loco_no">Loco No</label>
+        <input type="text" id="rs_loco_no" name="rs_loco_no" placeholder="Enter Loco No">
+      </div>
+
+      <div class="form-group">
+        <label for="rs_section">Section</label>
+        <input type="text" id="rs_section" name="rs_section" placeholder="Enter Section manually" autocomplete="off">
+      </div>
+
+      <div class="form-group full-width">
+        <label for="rs_remarks">Remarks if any</label>
+        <textarea id="rs_remarks" name="rs_remarks" rows="3" placeholder="Enter RS holding/application practice details"></textarea>
+      </div>
+
+    </div>
+
+    </div>
+    </div>
+    <!-- END SECTION 2 -->
+
+    <div id="submitMessage" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:9999; text-align:center; color:#1a7d1a; font-weight:bold; font-size:20px; padding:25px 40px; background:#e6f7e6; border:2px solid #1a7d1a; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.3);">
+      DATA SUBMITTED SUCCESSFULLY
+    </div>
+
+    <div id="submittingMessage" style="display:none; text-align:center; color:#856404; font-weight:bold; font-size:15px; margin-top:20px; padding:10px; background:#fff3cd; border:1px solid #856404; border-radius:6px;">
+      SUBMITTING... PLEASE WAIT
+    </div>
+
+    <div id="submitErrorMessage" style="display:none; text-align:center; color:#a30000; font-weight:bold; font-size:15px; margin-top:20px; padding:10px; background:#fde6e6; border:1px solid #a30000; border-radius:6px;">
+      SUBMISSION FAILED. PLEASE TRY AGAIN.
+    </div>
+
+    <div id="validationErrorBanner" style="display:none; text-align:center; color:#a30000; font-weight:bold; font-size:15px; margin-top:20px; padding:12px; background:#fde6e6; border:2px solid #a30000; border-radius:6px;">
+      ⚠️ PLEASE FILL ALL MANDATORY DETAILS BEFORE SUBMITTING
+    </div>
+
+    <div class="submit-row">
+      <button type="submit" id="submitBtn">Submit</button>
+    </div>
+
+  </form>
+</div>
+
+<script>
+const dangerSection = document.getElementById('dangerSection');
+const rsSection = document.getElementById('rsSection');
+const selector = document.getElementById('section_selector');
+
+function updateSections() {
+  const val = selector.value;
+  if (val === 'danger') {
+    dangerSection.style.display = 'block';
+    rsSection.style.display = 'none';
+  } else if (val === 'rs') {
+    dangerSection.style.display = 'none';
+    rsSection.style.display = 'block';
+  } else {
+    dangerSection.style.display = 'none';
+    rsSection.style.display = 'none';
+  }
+}
+
+selector.addEventListener('change', updateSections);
+updateSections(); // run on load to hide both initially
+
+const dsPlace = document.getElementById('ds_place');
+const dsLobbyGroup = document.getElementById('ds_lobby_group');
+const dsSectionGroup = document.getElementById('ds_section_group');
+const dsTrainGroup = document.getElementById('ds_train_group');
+const dsLocoGroup = document.getElementById('ds_loco_group');
+
+function updateDsPlace() {
+  const val = dsPlace.value;
+  const singleWrap = document.getElementById('ds_single_crew_wrap');
+  const singleDesig = document.getElementById('ds_single_desig_wrap');
+  const singleCms = document.getElementById('ds_single_cms_wrap');
+  const singleHq = document.getElementById('ds_single_hq_wrap');
+  const tableWrap = document.getElementById('ds_lobby_crew_table_wrap');
+
+  if (val === 'Lobby') {
+    dsLobbyGroup.style.display = 'flex';
+    dsSectionGroup.style.display = 'none';
+    dsTrainGroup.style.display = 'none';
+    dsLocoGroup.style.display = 'none';
+    // Hide single crew fields, show table
+    singleWrap.style.display = 'none';
+    singleDesig.style.display = 'none';
+    singleCms.style.display = 'none';
+    singleHq.style.display = 'none';
+    tableWrap.style.display = 'block';
+    if (document.getElementById('ds_crew_tbody').rows.length === 0) addCrewRow();
+  } else if (val === 'Section') {
+    dsLobbyGroup.style.display = 'none';
+    dsSectionGroup.style.display = 'flex';
+    dsTrainGroup.style.display = 'flex';
+    dsLocoGroup.style.display = 'flex';
+    singleWrap.style.display = '';
+    singleDesig.style.display = '';
+    singleCms.style.display = '';
+    singleHq.style.display = '';
+    tableWrap.style.display = 'none';
+  } else {
+    dsLobbyGroup.style.display = 'none';
+    dsSectionGroup.style.display = 'none';
+    dsTrainGroup.style.display = 'flex';
+    dsLocoGroup.style.display = 'flex';
+    singleWrap.style.display = '';
+    singleDesig.style.display = '';
+    singleCms.style.display = '';
+    singleHq.style.display = '';
+    tableWrap.style.display = 'none';
+  }
+}
+
+dsPlace.addEventListener('change', updateDsPlace);
+updateDsPlace(); // run on load
+
+// ===== CONFIG: Paste your deployed Apps Script Web App URL here =====
+const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytgH6bHWlkN7qLKIc3z_2ZsfdmIuYk_5vzSf4HSgEYuRsjDOmhQw960qJESUGzYCUv/exec";
+
+const submitBtn = document.getElementById('submitBtn');
+const submitMessage = document.getElementById('submitMessage');
+const submittingMessage = document.getElementById('submittingMessage');
+const submitErrorMessage = document.getElementById('submitErrorMessage');
+
+// ===== MANDATORY FIELD VALIDATION =====
+function clearErrors() {
+  document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+  document.querySelectorAll('.error-msg').forEach(el => el.remove());
+}
+
+function markError(el) {
+  el.classList.add('field-error');
+  const msg = document.createElement('span');
+  msg.className = 'error-msg';
+  msg.style.display = 'block';
+  msg.textContent = 'This field is required';
+  el.parentNode.appendChild(msg);
+}
+
+function validateForm() {
+  clearErrors();
+  let valid = true;
+  const sectionVal = document.getElementById('section_selector').value;
+
+  // Section selector itself
+  if (!sectionVal) {
+    markError(document.getElementById('section_selector'));
+    valid = false;
+  }
+
+  if (sectionVal === 'danger') {
+    // Date
+    const dsDate = document.getElementById('ds_date');
+    if (!dsDate.value.trim()) { markError(dsDate); valid = false; }
+
+    // Time
+    const dsTime = document.getElementById('ds_time');
+    if (!dsTime.value.trim()) { markError(dsTime); valid = false; }
+
+    // Place
+    const dsPlace = document.getElementById('ds_place');
+    if (!dsPlace.value) { markError(dsPlace); valid = false; }
+
+    // Lobby (only if Place = Lobby)
+    if (dsPlace.value === 'Lobby') {
+      const dsLobby = document.getElementById('ds_lobby');
+      if (!dsLobby.value) { markError(dsLobby); valid = false; }
+      // Validate crew table has at least 1 complete row
+      const crewRows = getCrewTableRows();
+      if (crewRows.length === 0) {
+        const tbody = document.getElementById('ds_crew_tbody');
+        const banner2 = document.getElementById('validationErrorBanner');
+        banner2.textContent = '⚠️ PLEASE ADD AT LEAST ONE CREW ENTRY IN THE TABLE';
+        valid = false;
+      } else {
+        // Manual entry (not selected from list) -> HQ becomes mandatory for each row
+        const tbodyRows = document.getElementById('ds_crew_tbody').rows;
+        for (let i = 0; i < tbodyRows.length; i++) {
+          const rowNameInput = tbodyRows[i].cells[1].querySelector('input[type=text]');
+          const rowHqInput = tbodyRows[i].cells[3].querySelector('input');
+          if (rowNameInput.value.trim() && !rowHqInput.value.trim()) {
+            markError(rowHqInput);
+            valid = false;
+          }
+        }
+      }
+    }
+
+    // Section text (only if Place = Section)
+    if (dsPlace.value === 'Section') {
+      const dsSection = document.getElementById('ds_section');
+      if (!dsSection.value.trim()) { markError(dsSection); valid = false; }
+      const dsTrainNo = document.getElementById('ds_train_no');
+      if (!dsTrainNo.value.trim()) { markError(dsTrainNo); valid = false; }
+      const dsLocoNo = document.getElementById('ds_loco_no');
+      if (!dsLocoNo.value.trim()) { markError(dsLocoNo); valid = false; }
+    }
+
+    // CLI Name
+    const dsCliName = document.getElementById('ds_cli_name');
+    if (!dsCliName.value) { markError(dsCliName); valid = false; }
+
+    // Crew Name (autocomplete) — only validate for Section/default mode
+    const dsCrewNameEl = document.getElementById('ds_crew_name');
+    if (dsPlace.value !== 'Lobby') {
+      if (!dsCrewNameEl.value.trim() || dsCrewNameEl.disabled) {
+        markError(dsCrewNameEl); valid = false;
+      } else if (dsCrewNameEl.value.trim() === 'OTHERS') {
+        const dsCrewNameOtherEl = document.getElementById('ds_crew_name_other');
+        if (!dsCrewNameOtherEl.value.trim()) { markError(dsCrewNameOtherEl); valid = false; }
+        // Manual entry (not selected from list) -> HQ becomes mandatory
+        const dsHqEl = document.getElementById('ds_hq');
+        if (!dsHqEl.value.trim()) { markError(dsHqEl); valid = false; }
+      }
+    }
+  }
+
+  if (sectionVal === 'rs') {
+    // Date
+    const rsDate = document.getElementById('rs_date');
+    if (!rsDate.value.trim()) { markError(rsDate); valid = false; }
+
+    // Time
+    const rsTime = document.getElementById('rs_time');
+    if (!rsTime.value.trim()) { markError(rsTime); valid = false; }
+
+    // Signal
+    const rsSignal = document.getElementById('rs_signal');
+    if (!rsSignal.value.trim()) { markError(rsSignal); valid = false; }
+
+    // CLI Name
+    const rsCliName = document.getElementById('rs_cli_name');
+    if (!rsCliName.value) { markError(rsCliName); valid = false; }
+
+    // LP Name
+    const rsLpNameEl = document.getElementById('rs_lp_name');
+    if (!rsLpNameEl.value.trim() || rsLpNameEl.disabled) {
+      markError(rsLpNameEl); valid = false;
+    } else if (rsLpNameEl.value.trim() === 'OTHERS') {
+      const rsLpNameOtherEl = document.getElementById('rs_lp_name_other');
+      if (!rsLpNameOtherEl.value.trim()) { markError(rsLpNameOtherEl); valid = false; }
+      // Manual entry (not selected from list) -> HQ becomes mandatory
+      const rsLpHqEl = document.getElementById('rs_lp_hq');
+      if (!rsLpHqEl.value.trim()) { markError(rsLpHqEl); valid = false; }
+    }
+
+    // ALP Name
+    const rsAlpNameEl = document.getElementById('rs_alp_name');
+    if (!rsAlpNameEl.value.trim() || rsAlpNameEl.disabled) {
+      markError(rsAlpNameEl); valid = false;
+    } else if (rsAlpNameEl.value.trim() === 'OTHERS') {
+      const rsAlpNameOtherEl = document.getElementById('rs_alp_name_other');
+      if (!rsAlpNameOtherEl.value.trim()) { markError(rsAlpNameOtherEl); valid = false; }
+      // Manual entry (not selected from list) -> HQ becomes mandatory
+      const rsAlpHqEl = document.getElementById('rs_alp_hq');
+      if (!rsAlpHqEl.value.trim()) { markError(rsAlpHqEl); valid = false; }
+    }
+
+    // Train No
+    const rsTrainNo = document.getElementById('rs_train_no');
+    if (!rsTrainNo.value.trim()) { markError(rsTrainNo); valid = false; }
+
+    // Loco No
+    const rsLocoNo = document.getElementById('rs_loco_no');
+    if (!rsLocoNo.value.trim()) { markError(rsLocoNo); valid = false; }
+
+    // Section
+    const rsSection = document.getElementById('rs_section');
+    if (!rsSection.value.trim()) { markError(rsSection); valid = false; }
+  }
+
+  const banner = document.getElementById('validationErrorBanner');
+  if (!valid) {
+    banner.style.display = 'block';
+    // Scroll to first error
+    const firstError = document.querySelector('.field-error');
+    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } else {
+    banner.style.display = 'none';
+  }
+  return valid;
+}
+
+document.getElementById('rbdForm').addEventListener('submit', function(e){
+  e.preventDefault();
+
+  if (!validateForm()) return;
+
+  submitMessage.style.display = 'none';
+  submitErrorMessage.style.display = 'none';
+  submittingMessage.style.display = 'block';
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+
+  if (GOOGLE_SHEET_SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
+    alert('Google Sheet URL not configured yet. Please set GOOGLE_SHEET_SCRIPT_URL in the script.');
+    submittingMessage.style.display = 'none';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit';
+    return;
+  }
+
+  const formData = new FormData(this);
+  const baseData = {};
+  formData.forEach((value, key) => { baseData[key] = value; });
+
+  // Clean OTHERS manual overrides for RS section
+  if (baseData['rs_lp_name'] === 'OTHERS' && baseData['rs_lp_name_other']) {
+    baseData['rs_lp_name'] = baseData['rs_lp_name_other'].trim();
+  }
+  if (baseData['rs_alp_name'] === 'OTHERS' && baseData['rs_alp_name_other']) {
+    baseData['rs_alp_name'] = baseData['rs_alp_name_other'].trim();
+  }
+  delete baseData['ds_crew_name_other'];
+  delete baseData['rs_lp_name_other'];
+  delete baseData['rs_alp_name_other'];
+
+  const sectionVal = document.getElementById('section_selector').value;
+  const sectionLabelMap = { danger: 'APPROACHING DANGER COUNSELLING', rs: 'RS PRACTICE' };
+  const sheetNameMap  = { danger: 'APPROACHING DANGER COUNSELLING', rs: 'RS PRACTICE' };
+  baseData['section_type']     = sectionLabelMap[sectionVal] || sectionVal;
+  baseData['section_selector'] = sectionLabelMap[sectionVal] || sectionVal;
+  baseData['target_sheet']     = sheetNameMap[sectionVal]    || 'Sheet1';
+
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const submittedAt = pad(now.getDate()) + '/' + pad(now.getMonth()+1) + '/' + now.getFullYear() +
+    ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+  baseData['submitted_at'] = submittedAt;
+
+  // ---- Build list of payloads to send ----
+  const payloads = [];
+
+  if (baseData['ds_place'] === 'Lobby') {
+    // LOBBY MODE: one sheet row per crew table entry
+    const crewRows = getCrewTableRows();
+    crewRows.forEach(function(cr, i) {
+      const row = Object.assign({}, baseData);
+      row['ds_crew_name']  = cr.crew_name;
+      row['ds_designation']= cr.designation;
+      row['ds_hq']         = cr.hq;
+      row['ds_crew_cms']   = cr.cms_id;
+      row['ds_lobby_crew_sno']   = cr.sno;
+      row['ds_lobby_crew_total'] = crewRows.length;
+      payloads.push(row);
+    });
+  } else {
+    // SECTION MODE: single row, resolve OTHERS
+    if (baseData['ds_crew_name'] === 'OTHERS' && baseData['ds_crew_name_other']) {
+      baseData['ds_crew_name'] = baseData['ds_crew_name_other'].trim();
+    }
+    payloads.push(baseData);
+  }
+
+  // ---- Send payloads sequentially ----
+  const formEl = this;
+  let idx = 0;
+
+  function sendNext() {
+    if (idx >= payloads.length) {
+      // All done
+      submittingMessage.style.display = 'none';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
+      const msg = document.getElementById('submitMessage');
+      msg.textContent = payloads.length > 1
+        ? 'DATA SUBMITTED SUCCESSFULLY (' + payloads.length + ' ROWS)'
+        : 'DATA SUBMITTED SUCCESSFULLY';
+      msg.style.display = 'block';
+      formEl.reset();
+      clearErrors();
+      document.getElementById('validationErrorBanner').style.display = 'none';
+      document.getElementById('validationErrorBanner').textContent = '⚠️ PLEASE FILL ALL MANDATORY DETAILS BEFORE SUBMITTING';
+      dsCrewNameOtherGroup.style.display = 'none';
+      rsLpNameOtherGroup.style.display = 'none';
+      rsAlpNameOtherGroup.style.display = 'none';
+      document.getElementById('ds_crew_tbody').innerHTML = '';
+      crewRowCounter = 0;
+      updateSections();
+      updateDsPlace();
+      setTimeout(() => { msg.style.display = 'none'; }, 5000);
+      return;
+    }
+
+    // Update progress indicator
+    submittingMessage.textContent = payloads.length > 1
+      ? 'SUBMITTING ' + (idx+1) + ' OF ' + payloads.length + '... PLEASE WAIT'
+      : 'SUBMITTING... PLEASE WAIT';
+
+    fetch(GOOGLE_SHEET_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payloads[idx])
+    })
+    .then(function() {
+      idx++;
+      sendNext();
+    })
+    .catch(function(err) {
+      console.error(err);
+      submittingMessage.style.display = 'none';
+      submitErrorMessage.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
+      setTimeout(() => { submitErrorMessage.style.display = 'none'; }, 5000);
+      alert('Error submitting row ' + (idx+1) + '. Please check your internet connection or script URL.');
+    });
+  }
+
+  sendNext();
+});
+
+// ===== CREW DATA: fetched live from Google Sheet (RAIPUR DIVISION CREW) =====
+// IMPORTANT: The sheet must be shared as "Anyone with the link - Viewer"
+// (Google Sheet > Share) or this will fail to load.
+// Uses a JSONP <script> tag (not fetch) so it works even when this HTML
+// file is opened directly from disk (file://), where fetch() to an
+// external domain gets blocked by the browser's CORS policy.
+const CREW_SHEET_ID = '1p-anwng3nFUpeqrOcUlQ5Kv-5B2hyvjyVswgdlOGhlo';
+const CREW_SHEET_GID = '0'; // change if crew list lives on a different tab
+
+let CREW_DATA = [];
+let crewLoadTimeoutId = null;
+
+function normalizeHeader(h) {
+  return (h || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function setNameInputState(inputEl, placeholderText, disabled) {
+  inputEl.placeholder = placeholderText;
+  inputEl.disabled = !!disabled;
+  if (disabled) inputEl.value = '';
+}
+
+function enableNameInputs() {
+  setNameInputState(dsCrewName, 'Type to search crew name...', false);
+  setNameInputState(rsLpName, 'Type to search LP name...', false);
+  setNameInputState(rsAlpName, 'Type to search ALP name...', false);
+}
+
+function showCrewLoadError(reason) {
+  console.error('Failed to load LP/ALP/Crew names from Google Sheet:', reason);
+  const msg = 'Could not load (' + (reason || 'check sheet sharing') + ')';
+  setNameInputState(dsCrewName, msg, true);
+  setNameInputState(rsLpName, msg, true);
+  setNameInputState(rsAlpName, msg, true);
+}
+
+// Called automatically by the JSONP response from Google
+function handleCrewSheetResponse(response) {
+  clearTimeout(crewLoadTimeoutId);
+  try {
+    if (!response || response.status === 'error') {
+      const detail = response && response.errors && response.errors[0] &&
+        (response.errors[0].detailed_message || response.errors[0].message);
+      throw new Error(detail || 'Google Sheets returned an error');
+    }
+
+    const table = response.table;
+    const headers = table.cols.map(c => normalizeHeader(c.label));
+    const nameIdx = headers.findIndex(h => ['name', 'crewname', 'lpalpname', 'employeename'].includes(h));
+    const desigIdx = headers.findIndex(h => ['designation', 'desig', 'category'].includes(h));
+    const hqIdx = headers.findIndex(h => ['hq', 'headquarter', 'headquarters'].includes(h));
+    const cmsIdx = headers.findIndex(h => ['cms', 'cmsid', 'crewcmsid'].includes(h));
+
+    if (nameIdx === -1) {
+      throw new Error('no "Name" column found - sheet headers were: ' + table.cols.map(c => c.label).join(', '));
+    }
+
+    const getCell = (cells, idx) => {
+      if (idx < 0) return '';
+      const cell = cells[idx];
+      return (cell && cell.v != null) ? String(cell.v).trim() : '';
+    };
+
+    CREW_DATA = table.rows
+      .map(row => {
+        const cells = row.c || [];
+        return {
+          name: getCell(cells, nameIdx),
+          designation: getCell(cells, desigIdx).toUpperCase(),
+          hq: getCell(cells, hqIdx),
+          cms: getCell(cells, cmsIdx)
+        };
+      })
+      .filter(c => c.name);
+
+    enableNameInputs();
+    enableCrewTableInputs();
+  } catch (err) {
+    showCrewLoadError(err.message);
+  }
+}
+
+function loadCrewData() {
+  setNameInputState(dsCrewName, 'Loading crew list...', true);
+  setNameInputState(rsLpName, 'Loading LP list...', true);
+  setNameInputState(rsAlpName, 'Loading ALP list...', true);
+
+  const src = 'https://docs.google.com/spreadsheets/d/' + CREW_SHEET_ID +
+    '/gviz/tq?gid=' + CREW_SHEET_GID +
+    '&headers=1&tqx=out:json;responseHandler:handleCrewSheetResponse';
+
+  const script = document.createElement('script');
+  script.src = src;
+  script.onerror = function () {
+    showCrewLoadError('could not reach the sheet - is it shared "Anyone with the link"?');
+  };
+  document.body.appendChild(script);
+
+  // Safety net in case the script loads but never calls our handler
+  crewLoadTimeoutId = setTimeout(function () {
+    showCrewLoadError('timed out - check sheet sharing settings');
+  }, 10000);
+}
+
+function getAllCrewNames() {
+  const seen = new Set();
+  const names = [];
+  CREW_DATA.forEach(c => {
+    if (c.name && !seen.has(c.name)) { seen.add(c.name); names.push(c.name); }
+  });
+  return names;
+}
+
+function getAllCrewCms() {
+  const seen = new Set();
+  const list = [];
+  CREW_DATA.forEach(c => {
+    if (c.cms && !seen.has(c.cms)) { seen.add(c.cms); list.push(c); }
+  });
+  return list;
+}
+
+function autoFillFromCrew(name, designationField, hqField, cmsField) {
+  const crew = CREW_DATA.find(c => c.name === name);
+  if (crew) {
+    designationField.value = crew.designation;
+    hqField.value = crew.hq;
+    cmsField.value = crew.cms;
+  } else {
+    designationField.value = '';
+    hqField.value = '';
+    cmsField.value = '';
+  }
+}
+
+function autoFillHqCms(name, hqField, cmsField) {
+  const crew = CREW_DATA.find(c => c.name === name);
+  if (crew) {
+    hqField.value = crew.hq;
+    cmsField.value = crew.cms;
+  } else {
+    hqField.value = '';
+    cmsField.value = '';
+  }
+}
+
+// ===== AUTOCOMPLETE WIDGET (type-to-search behavior for name fields) =====
+function setupAutocomplete(inputEl, listEl, getOptions, onSelect) {
+  let activeIndex = -1;
+
+  function closeList() {
+    listEl.innerHTML = '';
+    listEl.style.display = 'none';
+    activeIndex = -1;
+  }
+
+  function setActive(items) {
+    items.forEach((it, i) => it.classList.toggle('active', i === activeIndex));
+    if (activeIndex > -1) items[activeIndex].scrollIntoView({ block: 'nearest' });
+  }
+
+  function renderMatches(matches) {
+    listEl.innerHTML = '';
+    activeIndex = -1;
+    if (!matches.length) { closeList(); return; }
+    matches.forEach(name => {
+      const item = document.createElement('div');
+      item.className = 'autocomplete-item';
+      // Show "NAME CMSID" in the dropdown (e.g. "P VIJAY KUMAR DUG1368"),
+      // but the actual input value stays just the name.
+      if (name === 'OTHERS') {
+        item.textContent = name;
+      } else {
+        const crew = CREW_DATA.find(c => c.name === name);
+        item.textContent = (crew && crew.cms) ? (name + ' ' + crew.cms) : name;
+      }
+      item.addEventListener('mousedown', function (e) {
+        e.preventDefault(); // keep focus so blur doesn't close list before click registers
+        inputEl.value = name;
+        closeList();
+        onSelect(name);
+      });
+      listEl.appendChild(item);
+    });
+    listEl.style.display = 'block';
+  }
+
+  function showMatches() {
+    if (inputEl.disabled) return;
+    const q = inputEl.value.trim().toLowerCase();
+    onSelect(inputEl.value.trim()); // live exact-match autofill as they type/paste
+    if (!q) { closeList(); return; }
+    const matches = getOptions().filter(n => n.toLowerCase().includes(q)).slice(0, 50);
+    if (!matches.includes('OTHERS')) matches.push('OTHERS'); // always offer manual entry alongside matches
+    renderMatches(matches);
+  }
+
+  inputEl.addEventListener('input', showMatches);
+  inputEl.addEventListener('focus', showMatches);
+
+  inputEl.addEventListener('keydown', function (e) {
+    const items = listEl.querySelectorAll('.autocomplete-item');
+    if (!items.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIndex = Math.min(activeIndex + 1, items.length - 1);
+      setActive(items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIndex = Math.max(activeIndex - 1, 0);
+      setActive(items);
+    } else if (e.key === 'Enter') {
+      if (activeIndex > -1) {
+        e.preventDefault();
+        const name = items[activeIndex].textContent;
+        inputEl.value = name;
+        closeList();
+        onSelect(name);
+      }
+    } else if (e.key === 'Escape') {
+      closeList();
+    }
+  });
+
+  inputEl.addEventListener('blur', function () {
+    setTimeout(closeList, 150); // delay so a click on an item registers first
+  });
+}
+
+// ===== CMS ID -> NAME REVERSE LOOKUP (type CMS ID, pick name from list) =====
+function setupCmsAutocomplete(cmsInputEl, listEl, nameInputEl, onNamePicked) {
+  let activeIndex = -1;
+
+  function closeList() {
+    listEl.innerHTML = '';
+    listEl.style.display = 'none';
+    activeIndex = -1;
+  }
+
+  function setActive(items) {
+    items.forEach((it, i) => it.classList.toggle('active', i === activeIndex));
+    if (activeIndex > -1) items[activeIndex].scrollIntoView({ block: 'nearest' });
+  }
+
+  function pick(crew) {
+    cmsInputEl.value = crew.cms;
+    nameInputEl.value = crew.name;
+    closeList();
+    onNamePicked(crew.name);
+  }
+
+  function renderMatches(matches) {
+    listEl.innerHTML = '';
+    activeIndex = -1;
+    if (!matches.length) { closeList(); return; }
+    matches.forEach(crew => {
+      const item = document.createElement('div');
+      item.className = 'autocomplete-item';
+      item.textContent = crew.cms + ' \u2014 ' + crew.name;
+      item.addEventListener('mousedown', function (e) {
+        e.preventDefault();
+        pick(crew);
+      });
+      listEl.appendChild(item);
+    });
+    listEl.style.display = 'block';
+  }
+
+  function showMatches() {
+    const q = cmsInputEl.value.trim().toLowerCase();
+    if (!q) { closeList(); return; }
+    const matches = getAllCrewCms().filter(c => c.cms.toLowerCase().includes(q)).slice(0, 50);
+    renderMatches(matches);
+  }
+
+  cmsInputEl.addEventListener('input', showMatches);
+  cmsInputEl.addEventListener('focus', showMatches);
+
+  cmsInputEl.addEventListener('keydown', function (e) {
+    const items = listEl.querySelectorAll('.autocomplete-item');
+    if (!items.length) return;
+    const matches = getAllCrewCms().filter(c => c.cms.toLowerCase().includes(cmsInputEl.value.trim().toLowerCase())).slice(0, 50);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIndex = Math.min(activeIndex + 1, items.length - 1);
+      setActive(items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIndex = Math.max(activeIndex - 1, 0);
+      setActive(items);
+    } else if (e.key === 'Enter') {
+      if (activeIndex > -1 && matches[activeIndex]) {
+        e.preventDefault();
+        pick(matches[activeIndex]);
+      }
+    } else if (e.key === 'Escape') {
+      closeList();
+    }
+  });
+
+  cmsInputEl.addEventListener('blur', function () {
+    setTimeout(closeList, 150);
+  });
+}
+
+// ----- Link calendar date-picker icon to the DD/MM/YYYY text box -----
+function setupDatePicker(textInput, pickerInput) {
+  pickerInput.addEventListener('change', function () {
+    if (!pickerInput.value) return;
+    const [y, m, d] = pickerInput.value.split('-');
+    textInput.value = d + '/' + m + '/' + y;
+  });
+}
+setupDatePicker(document.getElementById('ds_date'), document.getElementById('ds_date_picker'));
+setupDatePicker(document.getElementById('rs_date'), document.getElementById('rs_date_picker'));
+
+// ----- Auto-format date text inputs as DD/MM/YYYY while typing -----
+function setupDateAutoFormat(inputEl) {
+  inputEl.addEventListener('input', function () {
+    let digits = inputEl.value.replace(/\D/g, '').slice(0, 8);
+    let formatted = digits;
+    if (digits.length > 4) {
+      formatted = digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4);
+    } else if (digits.length > 2) {
+      formatted = digits.slice(0, 2) + '/' + digits.slice(2);
+    }
+    inputEl.value = formatted;
+  });
+}
+setupDateAutoFormat(document.getElementById('ds_date'));
+setupDateAutoFormat(document.getElementById('rs_date'));
+
+// ----- Auto-format time text inputs as HH:MM while typing -----
+function setupTimeAutoFormat(inputEl) {
+  inputEl.addEventListener('input', function () {
+    let digits = inputEl.value.replace(/\D/g, '').slice(0, 4);
+    let formatted = digits;
+    if (digits.length > 2) {
+      formatted = digits.slice(0, 2) + ':' + digits.slice(2);
+    }
+    inputEl.value = formatted;
+  });
+}
+setupTimeAutoFormat(document.getElementById('ds_time'));
+setupTimeAutoFormat(document.getElementById('rs_time'));
+
+// ----- "OTHERS" manual-entry toggle for name autocomplete fields -----
+function toggleOtherNameInput(name, groupEl, otherInputEl) {
+  if (name === 'OTHERS') {
+    groupEl.style.display = 'flex';
+    otherInputEl.focus();
+  } else {
+    groupEl.style.display = 'none';
+    otherInputEl.value = '';
+  }
+}
+
+function setFieldsEditable(fields, editable) {
+  fields.forEach(function(f) {
+    if (editable) {
+      f.removeAttribute('readonly');
+      f.style.backgroundColor = '#fff';
+      f.placeholder = 'Enter manually';
+      f.value = '';
+    } else {
+      f.setAttribute('readonly', true);
+      f.style.backgroundColor = '#d3d3d3';
+      f.placeholder = 'Auto-filled';
+      f.value = '';
+    }
+  });
+}
+
+// ----- Danger Section -----
+const dsCrewName = document.getElementById('ds_crew_name');
+const dsCrewNameList = document.getElementById('ds_crew_name_list');
+const dsCrewNameOtherGroup = document.getElementById('ds_crew_name_other_group');
+const dsCrewNameOther = document.getElementById('ds_crew_name_other');
+const dsDesignation = document.getElementById('ds_designation');
+const dsCrewCms = document.getElementById('ds_crew_cms');
+const dsHq = document.getElementById('ds_hq');
+
+setupAutocomplete(dsCrewName, dsCrewNameList, getAllCrewNames, function (name) {
+  toggleOtherNameInput(name, dsCrewNameOtherGroup, dsCrewNameOther);
+  if (name === 'OTHERS') {
+    setFieldsEditable([dsDesignation, dsHq], true);
+  } else {
+    setFieldsEditable([dsDesignation, dsHq], false);
+    autoFillFromCrew(name, dsDesignation, dsHq, dsCrewCms);
+  }
+});
+
+setupCmsAutocomplete(dsCrewCms, document.getElementById('ds_crew_cms_list'), dsCrewName, function (name) {
+  toggleOtherNameInput(name, dsCrewNameOtherGroup, dsCrewNameOther);
+  setFieldsEditable([dsDesignation, dsHq], false);
+  autoFillFromCrew(name, dsDesignation, dsHq, dsCrewCms);
+});
+
+// ----- RS Section -----
+const rsLpName = document.getElementById('rs_lp_name');
+const rsLpNameList = document.getElementById('rs_lp_name_list');
+const rsLpNameOtherGroup = document.getElementById('rs_lp_name_other_group');
+const rsLpNameOther = document.getElementById('rs_lp_name_other');
+const rsAlpName = document.getElementById('rs_alp_name');
+const rsAlpNameList = document.getElementById('rs_alp_name_list');
+const rsAlpNameOtherGroup = document.getElementById('rs_alp_name_other_group');
+const rsAlpNameOther = document.getElementById('rs_alp_name_other');
+const rsLpHq = document.getElementById('rs_lp_hq');
+const rsLpCms = document.getElementById('rs_lp_cms');
+const rsAlpHq = document.getElementById('rs_alp_hq');
+const rsAlpCms = document.getElementById('rs_alp_cms');
+
+setupAutocomplete(rsLpName, rsLpNameList, getAllCrewNames, function (name) {
+  toggleOtherNameInput(name, rsLpNameOtherGroup, rsLpNameOther);
+  if (name === 'OTHERS') {
+    setFieldsEditable([rsLpHq], true);
+  } else {
+    setFieldsEditable([rsLpHq], false);
+    autoFillHqCms(name, rsLpHq, rsLpCms);
+  }
+});
+
+setupCmsAutocomplete(rsLpCms, document.getElementById('rs_lp_cms_list'), rsLpName, function (name) {
+  toggleOtherNameInput(name, rsLpNameOtherGroup, rsLpNameOther);
+  setFieldsEditable([rsLpHq], false);
+  autoFillHqCms(name, rsLpHq, rsLpCms);
+});
+setupAutocomplete(rsAlpName, rsAlpNameList, getAllCrewNames, function (name) {
+  toggleOtherNameInput(name, rsAlpNameOtherGroup, rsAlpNameOther);
+  if (name === 'OTHERS') {
+    setFieldsEditable([rsAlpHq], true);
+  } else {
+    setFieldsEditable([rsAlpHq], false);
+    autoFillHqCms(name, rsAlpHq, rsAlpCms);
+  }
+});
+
+setupCmsAutocomplete(rsAlpCms, document.getElementById('rs_alp_cms_list'), rsAlpName, function (name) {
+  toggleOtherNameInput(name, rsAlpNameOtherGroup, rsAlpNameOther);
+  setFieldsEditable([rsAlpHq], false);
+  autoFillHqCms(name, rsAlpHq, rsAlpCms);
+});
+
+// ===== LOBBY CREW TABLE: multi-row add/delete with autocomplete =====
+let crewRowCounter = 0;
+
+function addCrewRow() {
+  const tbody = document.getElementById('ds_crew_tbody');
+  crewRowCounter++;
+  const idx = crewRowCounter;
+  const tr = document.createElement('tr');
+  tr.dataset.rowIdx = idx;
+
+  // S.No
+  const tdSno = document.createElement('td');
+  tdSno.className = 'sno-cell';
+  tdSno.textContent = tbody.rows.length + 1;
+  tr.appendChild(tdSno);
+
+  // Crew Name (autocomplete)
+  const tdName = document.createElement('td');
+  tdName.className = 'crew-name-cell';
+  const nameInput = document.createElement('input');
+  nameInput.type = 'text';
+  nameInput.placeholder = CREW_DATA.length ? 'Type to search...' : 'Loading...';
+  nameInput.autocomplete = 'off';
+  nameInput.disabled = !CREW_DATA.length;
+  const acList = document.createElement('div');
+  acList.className = 'autocomplete-list';
+  tdName.appendChild(nameInput);
+  tdName.appendChild(acList);
+  tr.appendChild(tdName);
+
+  // Designation
+  const tdDesig = document.createElement('td');
+  const desigInput = document.createElement('input');
+  desigInput.type = 'text';
+  desigInput.className = 'crew-auto-field';
+  desigInput.placeholder = 'Auto';
+  desigInput.readOnly = true;
+  tdDesig.appendChild(desigInput);
+  tr.appendChild(tdDesig);
+
+  // HQ
+  const tdHq = document.createElement('td');
+  const hqInput = document.createElement('input');
+  hqInput.type = 'text';
+  hqInput.className = 'crew-auto-field';
+  hqInput.placeholder = 'Auto';
+  hqInput.readOnly = true;
+  tdHq.appendChild(hqInput);
+  tr.appendChild(tdHq);
+
+  // CMS ID
+  const tdCms = document.createElement('td');
+  tdCms.className = 'crew-name-cell';
+  const cmsInput = document.createElement('input');
+  cmsInput.type = 'text';
+  cmsInput.className = 'crew-auto-field editable';
+  cmsInput.placeholder = CREW_DATA.length ? 'Auto or type CMS ID...' : 'Loading...';
+  cmsInput.disabled = !CREW_DATA.length;
+  const cmsAcList = document.createElement('div');
+  cmsAcList.className = 'autocomplete-list';
+  tdCms.appendChild(cmsInput);
+  tdCms.appendChild(cmsAcList);
+  tr.appendChild(tdCms);
+
+  // Delete button
+  const tdDel = document.createElement('td');
+  const delBtn = document.createElement('button');
+  delBtn.type = 'button';
+  delBtn.className = 'btn-del-row';
+  delBtn.textContent = '✕';
+  delBtn.title = 'Remove row';
+  delBtn.addEventListener('click', function() {
+    tr.remove();
+    renumberCrewRows();
+  });
+  tdDel.appendChild(delBtn);
+  tr.appendChild(tdDel);
+
+  tbody.appendChild(tr);
+
+  // Setup autocomplete for this row's name input
+  setupAutocomplete(nameInput, acList, getAllCrewNames, function(name) {
+    if (name === 'OTHERS') {
+      desigInput.readOnly = false;
+      hqInput.readOnly = false;
+      desigInput.classList.add('editable');
+      hqInput.classList.add('editable');
+      desigInput.value = '';
+      hqInput.value = '';
+      cmsInput.value = '';
+      desigInput.placeholder = 'Enter manually';
+      hqInput.placeholder = 'Enter manually';
+      cmsInput.placeholder = 'Enter manually or search CMS ID';
+    } else {
+      desigInput.readOnly = true;
+      hqInput.readOnly = true;
+      desigInput.classList.remove('editable');
+      hqInput.classList.remove('editable');
+      desigInput.placeholder = 'Auto';
+      hqInput.placeholder = 'Auto';
+      cmsInput.placeholder = 'Auto or type CMS ID...';
+      const crew = CREW_DATA.find(c => c.name === name);
+      if (crew) {
+        desigInput.value = crew.designation;
+        hqInput.value = crew.hq;
+        cmsInput.value = crew.cms;
+      } else {
+        desigInput.value = '';
+        hqInput.value = '';
+        cmsInput.value = '';
+      }
+    }
+  });
+
+  // Reverse lookup: type CMS ID in this row to pick a matching crew name
+  setupCmsAutocomplete(cmsInput, cmsAcList, nameInput, function(name) {
+    desigInput.readOnly = true;
+    hqInput.readOnly = true;
+    desigInput.classList.remove('editable');
+    hqInput.classList.remove('editable');
+    desigInput.placeholder = 'Auto';
+    hqInput.placeholder = 'Auto';
+    cmsInput.placeholder = 'Auto or type CMS ID...';
+    const crew = CREW_DATA.find(c => c.name === name);
+    if (crew) {
+      desigInput.value = crew.designation;
+      hqInput.value = crew.hq;
+    }
+  });
+
+  return tr;
+}
+
+function renumberCrewRows() {
+  const rows = document.getElementById('ds_crew_tbody').rows;
+  for (let i = 0; i < rows.length; i++) {
+    rows[i].cells[0].textContent = i + 1;
+  }
+}
+
+function enableCrewTableInputs() {
+  const inputs = document.querySelectorAll('#ds_crew_tbody input[type=text]:not(.crew-auto-field)');
+  inputs.forEach(inp => {
+    inp.disabled = false;
+    inp.placeholder = 'Type to search...';
+  });
+  const cmsInputs = document.querySelectorAll('#ds_crew_tbody input.crew-auto-field.editable');
+  cmsInputs.forEach(inp => {
+    inp.disabled = false;
+    if (!inp.value) inp.placeholder = 'Auto or type CMS ID...';
+  });
+}
+
+document.getElementById('btn_add_crew_row').addEventListener('click', function() {
+  addCrewRow();
+});
+
+function getCrewTableRows() {
+  const rows = document.getElementById('ds_crew_tbody').rows;
+  const result = [];
+  for (let i = 0; i < rows.length; i++) {
+    const cells = rows[i].cells;
+    const name = cells[1].querySelector('input[type=text]').value.trim();
+    const desig = cells[2].querySelector('input').value.trim();
+    const hq = cells[3].querySelector('input').value.trim();
+    const cms = cells[4].querySelector('input').value.trim();
+    if (name) result.push({ sno: i + 1, crew_name: name, designation: desig, hq: hq, cms_id: cms });
+  }
+  return result;
+}
+
+// Fetch LP / ALP / Crew names live from the Google Sheet
+loadCrewData();
+</script>
+</body>
+</html>
