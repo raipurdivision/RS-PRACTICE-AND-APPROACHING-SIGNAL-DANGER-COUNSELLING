@@ -8,6 +8,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -802,6 +803,17 @@ function validateForm() {
         const banner2 = document.getElementById('validationErrorBanner');
         banner2.textContent = '⚠️ PLEASE ADD AT LEAST ONE CREW ENTRY IN THE TABLE';
         valid = false;
+      } else {
+        // Manual entry (not selected from list) -> HQ becomes mandatory for each row
+        const tbodyRows = document.getElementById('ds_crew_tbody').rows;
+        for (let i = 0; i < tbodyRows.length; i++) {
+          const rowNameInput = tbodyRows[i].cells[1].querySelector('input[type=text]');
+          const rowHqInput = tbodyRows[i].cells[3].querySelector('input');
+          if (rowNameInput.value.trim() && !rowHqInput.value.trim()) {
+            markError(rowHqInput);
+            valid = false;
+          }
+        }
       }
     }
 
@@ -827,6 +839,9 @@ function validateForm() {
       } else if (dsCrewNameEl.value.trim() === 'OTHERS') {
         const dsCrewNameOtherEl = document.getElementById('ds_crew_name_other');
         if (!dsCrewNameOtherEl.value.trim()) { markError(dsCrewNameOtherEl); valid = false; }
+        // Manual entry (not selected from list) -> HQ becomes mandatory
+        const dsHqEl = document.getElementById('ds_hq');
+        if (!dsHqEl.value.trim()) { markError(dsHqEl); valid = false; }
       }
     }
   }
@@ -855,6 +870,9 @@ function validateForm() {
     } else if (rsLpNameEl.value.trim() === 'OTHERS') {
       const rsLpNameOtherEl = document.getElementById('rs_lp_name_other');
       if (!rsLpNameOtherEl.value.trim()) { markError(rsLpNameOtherEl); valid = false; }
+      // Manual entry (not selected from list) -> HQ becomes mandatory
+      const rsLpHqEl = document.getElementById('rs_lp_hq');
+      if (!rsLpHqEl.value.trim()) { markError(rsLpHqEl); valid = false; }
     }
 
     // ALP Name
@@ -864,6 +882,9 @@ function validateForm() {
     } else if (rsAlpNameEl.value.trim() === 'OTHERS') {
       const rsAlpNameOtherEl = document.getElementById('rs_alp_name_other');
       if (!rsAlpNameOtherEl.value.trim()) { markError(rsAlpNameOtherEl); valid = false; }
+      // Manual entry (not selected from list) -> HQ becomes mandatory
+      const rsAlpHqEl = document.getElementById('rs_alp_hq');
+      if (!rsAlpHqEl.value.trim()) { markError(rsAlpHqEl); valid = false; }
     }
 
     // Train No
@@ -1189,7 +1210,14 @@ function setupAutocomplete(inputEl, listEl, getOptions, onSelect) {
     matches.forEach(name => {
       const item = document.createElement('div');
       item.className = 'autocomplete-item';
-      item.textContent = name;
+      // Show "NAME CMSID" in the dropdown (e.g. "P VIJAY KUMAR DUG1368"),
+      // but the actual input value stays just the name.
+      if (name === 'OTHERS') {
+        item.textContent = name;
+      } else {
+        const crew = CREW_DATA.find(c => c.name === name);
+        item.textContent = (crew && crew.cms) ? (name + ' ' + crew.cms) : name;
+      }
       item.addEventListener('mousedown', function (e) {
         e.preventDefault(); // keep focus so blur doesn't close list before click registers
         inputEl.value = name;
