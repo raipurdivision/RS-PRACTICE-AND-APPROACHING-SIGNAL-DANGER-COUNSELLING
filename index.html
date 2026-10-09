@@ -1,20 +1,8 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Railway Board Drive - Counselling Form</title>
 <style>
   body {
@@ -249,6 +237,122 @@
   }
   #btn_add_crew_row:hover { background: #145214; }
   .sno-cell { text-align: center; font-weight: bold; color: #003366; min-width: 36px; }
+
+  /* ===== BASE ADDITIONS ===== */
+
+  /* ===== LOADER / SAVED / PDF OVERLAYS ===== */
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 9999; align-items: center; justify-content: center; padding: 16px; }
+  .overlay.show { display: flex; }
+  .overlay-card { background: #fff; border-radius: 22px; padding: 30px 20px 26px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.4); box-sizing: border-box; }
+  .ring-wrap { position: relative; width: 112px; height: 112px; margin: 0 auto 24px; }
+  .ring { position: absolute; inset: 0; border-radius: 50%; border: 9px solid #dcf3e1; border-top-color: #16a34a; box-sizing: border-box; animation: ringSpin 1s linear infinite; }
+  .ring.done { animation: none; border-color: #16a34a; background: #e6f7e6; }
+  .ring-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 46px; animation: iconPulse 1.2s ease-in-out infinite; }
+  .ring.done + .ring-icon { animation: none; }
+  .loader-title { color: #16a34a; font-weight: 800; font-size: 21px; line-height: 1.25; }
+  .loader-sub { color: #166534; font-weight: 700; font-size: 15px; margin-top: 8px; }
+  @keyframes ringSpin { to { transform: rotate(360deg); } }
+  @keyframes iconPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+  .pdf-card h3 { margin: 0 0 6px; color: #003366; font-size: 22px; }
+  .pdf-card p { margin: 0 0 16px; color: #444; font-size: 13px; word-break: break-all; }
+  .pdf-card button { display: block; width: 100%; margin-top: 10px; padding: 13px 10px; font-size: 16px; font-weight: 700; border-radius: 10px; color: #fff; }
+  .pdf-card .pb-dl { background: #1d4ed8; }
+  .pdf-card .pb-sh { background: #16a34a; }
+  .pdf-card .pb-cl { background: #6b7280; }
+
+  .toast { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); background: #111827; color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 14px; font-weight: 600; z-index: 10000; display: none; max-width: 90%; text-align: center; }
+
+  /* ===== DESKTOP: plain original-style buttons inside the form container ===== */
+  .bottom-nav { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; padding: 0 30px 30px; }
+  .bottom-nav button { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; font-size: 16px; border-radius: 6px; }
+  .bottom-nav .nav-ico { font-size: 16px; }
+  .bottom-nav button:disabled { cursor: not-allowed; opacity: 1; }
+  .bottom-nav button.is-loading { background: #856404; }
+  .bottom-nav button.is-submitted { background: #15803d; }
+
+  /* ===== MOBILE CSS ONLY ===== */
+  @media (max-width: 768px) {
+    body { padding-bottom: 110px; }
+    textarea { width: 100%; box-sizing: border-box; resize: vertical; line-height: 1.4; font-family: inherit; }
+    /* ===== BOTTOM NAV BAR ===== */
+    .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; gap: 6px; justify-content: center; padding: 8px 8px calc(8px + env(safe-area-inset-bottom)); background: #0b1220; border-top: 1px solid #22304d; box-shadow: 0 -4px 14px rgba(0,0,0,0.45); }
+    .bottom-nav button { flex: 1 1 0; max-width: 150px; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 2px 7px; background: #1b2436; color: #fff; border: none; border-bottom: 4px solid var(--c); border-radius: 9px; font-size: 11px; font-weight: 700; line-height: 1.1; white-space: nowrap; cursor: pointer; }
+    .bottom-nav button:hover { background: #26324b; }
+    .bottom-nav button:active { transform: translateY(1px); }
+    .bottom-nav .nav-ico { font-size: 21px; line-height: 1; }
+    .bottom-nav .nav-lab { display: block; }
+    .bottom-nav button:disabled { cursor: not-allowed; opacity: 1; }
+    .bottom-nav button.is-loading { background: #3a3317; color: #fde68a; }
+    .bottom-nav button.is-submitted { background: #15803d; color: #fff; }
+    body { padding: 8px 8px 110px; }
+    .container { border-radius: 6px; }
+    .header { padding: 14px 8px; }
+    .header h1 { font-size: 19px; }
+    .header h2 { font-size: 13px; }
+    .header h3 { font-size: 13px; }
+    form { padding: 14px 12px 20px; }
+    .section-title { font-size: 15px; margin: 18px 0 12px; padding: 9px 11px; }
+    .form-grid { grid-template-columns: 1fr; gap: 13px; }
+    label { font-size: 14px; }
+    input, select, textarea { font-size: 16px; padding: 11px 10px; }
+    textarea { min-height: 130px; }
+    .autocomplete-item { padding: 11px 10px; font-size: 15px; }
+    #btn_add_crew_row { width: 100%; padding: 12px; font-size: 15px; }
+    /* crew table -> stacked cards */
+    #ds_crew_table, #ds_crew_table tbody, #ds_crew_table tr, #ds_crew_table td { display: block; width: 100%; box-sizing: border-box; }
+    #ds_crew_table thead { display: none; }
+    #ds_crew_table tbody tr, #ds_crew_table tbody tr:nth-child(even), #ds_crew_table tbody tr:hover { position: relative; background: #f4f8fd; border: 1px solid #c5d0de; border-radius: 10px; padding: 10px; margin-bottom: 12px; }
+    #ds_crew_table td { border: none; padding: 4px 0; min-width: 0; }
+    #ds_crew_table td.sno-cell { text-align: left; min-width: 0; font-size: 14px; }
+    #ds_crew_table td.sno-cell::before { content: 'CREW # '; }
+    #ds_crew_table td:nth-child(2)::before { content: 'CREW NAME'; }
+    #ds_crew_table td:nth-child(3)::before { content: 'DESIGNATION'; }
+    #ds_crew_table td:nth-child(4)::before { content: 'HQ'; }
+    #ds_crew_table td:nth-child(5)::before { content: 'CMS ID'; }
+    #ds_crew_table td:nth-child(n+2):nth-child(-n+5)::before { display: block; font-size: 12px; font-weight: 700; color: #003366; margin-bottom: 3px; }
+    #ds_crew_table td:nth-child(6) { position: absolute; top: 8px; right: 8px; width: auto; padding: 0; }
+    .crew-name-cell { min-width: 0; }
+    .crew-name-cell input[type=text], .crew-auto-field { font-size: 16px; padding: 10px; }
+    .btn-del-row { padding: 8px 14px; font-size: 14px; }
+    .bottom-nav { gap: 4px; padding-left: 5px; padding-right: 5px; }
+    .bottom-nav button { font-size: 10px; padding: 8px 1px 7px; }
+    .bottom-nav .nav-ico { font-size: 19px; }
+  }
+
+  /* ===== FLAT BUTTONS (nav bar) - equal size, no 3D ===== */
+  .bottom-nav { gap: 10px; padding-top: 0; padding-bottom: 22px; }
+  .bottom-nav button {
+    background: var(--c2);
+    color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;
+    text-shadow: none; box-shadow: none; filter: none;
+    border: none; border-radius: 6px;
+    width: 150px; height: 40px; padding: 0 10px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 13px; white-space: nowrap; text-align: center;
+    transition: background .15s;
+  }
+  .bottom-nav button:hover { background: var(--c3); filter: none; }
+  .bottom-nav button:active { transform: none; box-shadow: none; }
+  .bottom-nav button.is-loading { background: #d97706; color: #fff; }
+  .bottom-nav button.is-submitted { background: #15803d; color: #fff; }
+  .bottom-nav .nav-ico { font-size: 14px; }
+  @media (max-width: 768px) {
+    .bottom-nav { gap: 4px; padding: 5px 5px calc(5px + env(safe-area-inset-bottom)); }
+    .bottom-nav button { flex: 1 1 0; width: auto; max-width: 120px; height: 34px; padding: 2px 1px; flex-direction: column; gap: 1px; font-size: 8.5px; white-space: normal; border-radius: 6px; }
+    .bottom-nav .nav-ico { font-size: 13px; }
+    .bottom-nav .nav-lab { line-height: 1.05; }
+    body { padding-bottom: 60px; }
+    .toast { bottom: 56px; }
+  }
+
+  /* ONLY SUBMIT + RESET */
+  .bottom-nav { justify-content: center; }
+  .bottom-nav button { flex: 0 1 220px; min-width: 140px; }
+  @media (max-width: 768px) {
+    .bottom-nav button { flex: 1 1 0; max-width: 200px; height: 46px; padding: 4px 6px; font-size: 12px; flex-direction: row; gap: 6px; white-space: nowrap; }
+    .bottom-nav .nav-ico { font-size: 16px; }
+    .bottom-nav .nav-lab { font-size: 12px; line-height: 1.1; }
+  }
 </style>
 </head>
 <body>
@@ -258,9 +362,7 @@
     <h2>APPROACHING DANGER SIGNAL COUNSELLING / RS APPLICATION PRACTICE</h2>
     <h3>RAIPUR DIVISION</h3>
   </div>
-
   <form id="rbdForm">
-
     <div class="form-group full-width" style="margin-bottom:10px;">
       <label for="section_selector">Select Drive</label>
       <select id="section_selector" name="section_selector">
@@ -269,12 +371,10 @@
         <option value="rs">RS APPLICATION PRACTICE</option>
       </select>
     </div>
-
     <!-- SECTION 1: DANGER SIGNAL APPROACHING COUNSELLING -->
     <div id="dangerSection">
     <div class="section-title">1. DANGER SIGNAL APPROACHING COUNSELLING</div>
     <div class="form-grid">
-
       <div class="form-group">
         <label for="ds_date">Date</label>
         <div style="position:relative;">
@@ -282,12 +382,10 @@
           <input type="date" id="ds_date_picker" style="position:absolute; right:6px; top:50%; transform:translateY(-50%); width:24px; height:24px; padding:0; border:none; background:transparent; cursor:pointer;">
         </div>
       </div>
-
       <div class="form-group">
         <label for="ds_time">Time</label>
         <input type="text" id="ds_time" name="ds_time" placeholder="HH:MM">
       </div>
-
       <div class="form-group">
         <label for="ds_place">Place</label>
         <select id="ds_place" name="ds_place">
@@ -296,7 +394,6 @@
           <option value="Section">Section</option>
         </select>
       </div>
-
       <div class="form-group" id="ds_lobby_group">
         <label for="ds_lobby">Select Lobby</label>
         <select id="ds_lobby" name="ds_lobby">
@@ -309,7 +406,6 @@
           <option value="RSD">RSD</option>
         </select>
       </div>
-
       <div class="form-group">
         <label for="ds_cli_name">CLI Name</label>
         <select id="ds_cli_name" name="ds_cli_name">
@@ -410,12 +506,10 @@
           <option value="OTHERS">OTHERS</option>
         </select>
       </div>
-
       <div class="form-group" id="ds_cli_name_other_group" style="display:none;">
         <label for="ds_cli_name_other">Enter CLI Name (Manual)</label>
         <input type="text" id="ds_cli_name_other" name="ds_cli_name_other" placeholder="Type CLI name manually" autocomplete="off">
       </div>
-
       <!-- SINGLE CREW ENTRY — shown only for Place=Section -->
       <div class="form-group" id="ds_single_crew_wrap">
         <label for="ds_crew_name">Crew Name</label>
@@ -424,17 +518,14 @@
           <div class="autocomplete-list" id="ds_crew_name_list"></div>
         </div>
       </div>
-
       <div class="form-group" id="ds_crew_name_other_group" style="display:none;">
         <label for="ds_crew_name_other">Enter Crew Name (Manual)</label>
         <input type="text" id="ds_crew_name_other" name="ds_crew_name_other" placeholder="Type crew name manually" autocomplete="off">
       </div>
-
       <div class="form-group" id="ds_single_desig_wrap">
         <label for="ds_designation">Designation</label>
         <input type="text" id="ds_designation" name="ds_designation" placeholder="Auto-filled" readonly>
       </div>
-
       <div class="form-group" id="ds_single_cms_wrap">
         <label for="ds_crew_cms">Crew CMS ID</label>
         <div class="autocomplete-wrapper">
@@ -442,12 +533,10 @@
           <div class="autocomplete-list" id="ds_crew_cms_list"></div>
         </div>
       </div>
-
       <div class="form-group" id="ds_single_hq_wrap">
         <label for="ds_hq">HQ</label>
         <input type="text" id="ds_hq" name="ds_hq" placeholder="Auto-filled" readonly>
       </div>
-
       <!-- MULTI-CREW TABLE — shown only for Place=Lobby -->
       <div id="ds_lobby_crew_table_wrap">
         <div class="crew-table-label">CREW LIST (LOBBY COUNSELLING)</div>
@@ -468,36 +557,29 @@
         </table>
         <button type="button" id="btn_add_crew_row">+ ADD ROW</button>
       </div>
-
       <div class="form-group" id="ds_train_group">
         <label for="ds_train_no">Train No</label>
         <input type="text" id="ds_train_no" name="ds_train_no" placeholder="Enter Train No">
       </div>
-
       <div class="form-group" id="ds_loco_group">
         <label for="ds_loco_no">Loco No</label>
         <input type="text" id="ds_loco_no" name="ds_loco_no" placeholder="Enter Loco No">
       </div>
-
       <div class="form-group" id="ds_section_group">
         <label for="ds_section">Section</label>
         <input type="text" id="ds_section" name="ds_section" placeholder="Enter Section manually" autocomplete="off">
       </div>
-
       <div class="form-group full-width">
         <label for="ds_remarks">Remarks if any</label>
         <textarea id="ds_remarks" name="ds_remarks" rows="3" placeholder="Enter counselling remarks"></textarea>
       </div>
-
     </div>
     </div>
     <!-- END SECTION 1 -->
-
     <!-- SECTION 2: RS HOLDING PRACTICE / APPLICATION PRACTICE -->
     <div id="rsSection">
     <div class="section-title">2. RS APPLICATION PRACTICE</div>
     <div class="form-grid">
-
       <div class="form-group">
         <label for="rs_date">Date</label>
         <div style="position:relative;">
@@ -505,17 +587,14 @@
           <input type="date" id="rs_date_picker" style="position:absolute; right:6px; top:50%; transform:translateY(-50%); width:24px; height:24px; padding:0; border:none; background:transparent; cursor:pointer;">
         </div>
       </div>
-
       <div class="form-group">
         <label for="rs_time">Time</label>
         <input type="text" id="rs_time" name="rs_time" placeholder="HH:MM">
       </div>
-
       <div class="form-group">
         <label for="rs_signal">Signal Name/No</label>
         <input type="text" id="rs_signal" name="rs_signal" placeholder="Enter Signal Name/No">
       </div>
-
       <div class="form-group">
         <label for="rs_cli_name">CLI Name</label>
         <select id="rs_cli_name" name="rs_cli_name">
@@ -616,12 +695,10 @@
           <option value="OTHERS">OTHERS</option>
         </select>
       </div>
-
       <div class="form-group" id="rs_cli_name_other_group" style="display:none;">
         <label for="rs_cli_name_other">Enter CLI Name (Manual)</label>
         <input type="text" id="rs_cli_name_other" name="rs_cli_name_other" placeholder="Type CLI name manually" autocomplete="off">
       </div>
-
       <div class="form-group">
         <label for="rs_lp_name">LP Name</label>
         <div class="autocomplete-wrapper">
@@ -629,12 +706,10 @@
           <div class="autocomplete-list" id="rs_lp_name_list"></div>
         </div>
       </div>
-
       <div class="form-group" id="rs_lp_name_other_group" style="display:none;">
         <label for="rs_lp_name_other">Enter LP Name (Manual)</label>
         <input type="text" id="rs_lp_name_other" name="rs_lp_name_other" placeholder="Type LP name manually" autocomplete="off">
       </div>
-
       <div class="form-group">
         <label for="rs_alp_name">ALP Name</label>
         <div class="autocomplete-wrapper">
@@ -642,17 +717,14 @@
           <div class="autocomplete-list" id="rs_alp_name_list"></div>
         </div>
       </div>
-
       <div class="form-group" id="rs_alp_name_other_group" style="display:none;">
         <label for="rs_alp_name_other">Enter ALP Name (Manual)</label>
         <input type="text" id="rs_alp_name_other" name="rs_alp_name_other" placeholder="Type ALP name manually" autocomplete="off">
       </div>
-
       <div class="form-group">
         <label for="rs_lp_hq">LP HQ</label>
         <input type="text" id="rs_lp_hq" name="rs_lp_hq" placeholder="Auto-filled" readonly>
       </div>
-
       <div class="form-group">
         <label for="rs_lp_cms">LP CMS ID</label>
         <div class="autocomplete-wrapper">
@@ -660,12 +732,10 @@
           <div class="autocomplete-list" id="rs_lp_cms_list"></div>
         </div>
       </div>
-
       <div class="form-group">
         <label for="rs_alp_hq">ALP HQ</label>
         <input type="text" id="rs_alp_hq" name="rs_alp_hq" placeholder="Auto-filled" readonly>
       </div>
-
       <div class="form-group">
         <label for="rs_alp_cms">ALP CMS ID</label>
         <div class="autocomplete-wrapper">
@@ -673,61 +743,74 @@
           <div class="autocomplete-list" id="rs_alp_cms_list"></div>
         </div>
       </div>
-
       <div class="form-group">
         <label for="rs_train_no">Train No</label>
         <input type="text" id="rs_train_no" name="rs_train_no" placeholder="Enter Train No">
       </div>
-
       <div class="form-group">
         <label for="rs_loco_no">Loco No</label>
         <input type="text" id="rs_loco_no" name="rs_loco_no" placeholder="Enter Loco No">
       </div>
-
       <div class="form-group">
         <label for="rs_section">Section</label>
         <input type="text" id="rs_section" name="rs_section" placeholder="Enter Section manually" autocomplete="off">
       </div>
-
       <div class="form-group full-width">
         <label for="rs_remarks">Remarks if any</label>
         <textarea id="rs_remarks" name="rs_remarks" rows="3" placeholder="Enter RS holding/application practice details"></textarea>
       </div>
-
     </div>
-
     </div>
     </div>
     <!-- END SECTION 2 -->
-
-    <div id="submitMessage" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:9999; text-align:center; color:#1a7d1a; font-weight:bold; font-size:20px; padding:25px 40px; background:#e6f7e6; border:2px solid #1a7d1a; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.3);">
-      DATA SUBMITTED SUCCESSFULLY
-    </div>
-
-    <div id="submittingMessage" style="display:none; text-align:center; color:#856404; font-weight:bold; font-size:15px; margin-top:20px; padding:10px; background:#fff3cd; border:1px solid #856404; border-radius:6px;">
-      SUBMITTING... PLEASE WAIT
-    </div>
-
     <div id="submitErrorMessage" style="display:none; text-align:center; color:#a30000; font-weight:bold; font-size:15px; margin-top:20px; padding:10px; background:#fde6e6; border:1px solid #a30000; border-radius:6px;">
       SUBMISSION FAILED. PLEASE TRY AGAIN.
     </div>
-
     <div id="validationErrorBanner" style="display:none; text-align:center; color:#a30000; font-weight:bold; font-size:15px; margin-top:20px; padding:12px; background:#fde6e6; border:2px solid #a30000; border-radius:6px;">
       ⚠️ PLEASE FILL ALL MANDATORY DETAILS BEFORE SUBMITTING
     </div>
-
-    <div class="submit-row">
-      <button type="submit" id="submitBtn">Submit</button>
-    </div>
-
   </form>
+<!-- BOTTOM NAV BAR -->
+<nav class="bottom-nav" id="bottomNav">
+  <button type="button" id="btnReset" style="--c1:#f06a79;--c2:#c8283b;--c3:#8f1c2b;"><span class="nav-ico">🔄</span><span class="nav-lab">Reset</span></button>
+  <button type="button" id="submitBtn" style="--c1:#23a02f;--c2:#0d6a14;--c3:#084d0e;"><span class="nav-ico">✅</span><span class="nav-lab">Submit</span></button>
+</nav>
 </div>
 
+<!-- LOADER / SAVED OVERLAY -->
+<div id="loaderOverlay" class="overlay">
+  <div class="overlay-card">
+    <div class="ring-wrap">
+      <div class="ring" id="loaderRing"></div>
+      <div class="ring-icon" id="loaderIcon">✋</div>
+    </div>
+    <div class="loader-title" id="loaderTitle">⏳ PLEASE WAIT — DATA SAVING...</div>
+    <div class="loader-sub" id="loaderSub">Do not close or refresh this page</div>
+  </div>
+</div>
+
+<!-- PDF READY POPUP -->
+<div id="pdfOverlay" class="overlay">
+  <div class="overlay-card pdf-card">
+    <div style="font-size:48px;">📄</div>
+    <h3>PDF READY</h3>
+    <p id="pdfFileName"></p>
+    <button type="button" class="pb-dl" id="pdfDownloadBtn">⬇️ Download PDF</button>
+    <button type="button" class="pb-sh" id="pdfShareBtn">📤 Share / Save PDF</button>
+    <button type="button" class="pb-cl" id="pdfCloseBtn">Close</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<input type="file" id="draftFile" accept=".json,application/json" style="display:none">
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 <script>
 const dangerSection = document.getElementById('dangerSection');
 const rsSection = document.getElementById('rsSection');
 const selector = document.getElementById('section_selector');
-
 function updateSections() {
   const val = selector.value;
   if (val === 'danger') {
@@ -741,16 +824,13 @@ function updateSections() {
     rsSection.style.display = 'none';
   }
 }
-
 selector.addEventListener('change', updateSections);
 updateSections(); // run on load to hide both initially
-
 const dsPlace = document.getElementById('ds_place');
 const dsLobbyGroup = document.getElementById('ds_lobby_group');
 const dsSectionGroup = document.getElementById('ds_section_group');
 const dsTrainGroup = document.getElementById('ds_train_group');
 const dsLocoGroup = document.getElementById('ds_loco_group');
-
 function updateDsPlace() {
   const val = dsPlace.value;
   const singleWrap = document.getElementById('ds_single_crew_wrap');
@@ -758,7 +838,6 @@ function updateDsPlace() {
   const singleCms = document.getElementById('ds_single_cms_wrap');
   const singleHq = document.getElementById('ds_single_hq_wrap');
   const tableWrap = document.getElementById('ds_lobby_crew_table_wrap');
-
   if (val === 'Lobby') {
     dsLobbyGroup.style.display = 'flex';
     dsSectionGroup.style.display = 'none';
@@ -793,24 +872,17 @@ function updateDsPlace() {
     tableWrap.style.display = 'none';
   }
 }
-
 dsPlace.addEventListener('change', updateDsPlace);
 updateDsPlace(); // run on load
-
 // ===== CONFIG: Paste your deployed Apps Script Web App URL here =====
 const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytgH6bHWlkN7qLKIc3z_2ZsfdmIuYk_5vzSf4HSgEYuRsjDOmhQw960qJESUGzYCUv/exec";
-
 const submitBtn = document.getElementById('submitBtn');
-const submitMessage = document.getElementById('submitMessage');
-const submittingMessage = document.getElementById('submittingMessage');
 const submitErrorMessage = document.getElementById('submitErrorMessage');
-
 // ===== MANDATORY FIELD VALIDATION =====
 function clearErrors() {
   document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
   document.querySelectorAll('.error-msg').forEach(el => el.remove());
 }
-
 function markError(el) {
   el.classList.add('field-error');
   const msg = document.createElement('span');
@@ -819,31 +891,25 @@ function markError(el) {
   msg.textContent = 'This field is required';
   el.parentNode.appendChild(msg);
 }
-
 function validateForm() {
   clearErrors();
   let valid = true;
   const sectionVal = document.getElementById('section_selector').value;
-
   // Section selector itself
   if (!sectionVal) {
     markError(document.getElementById('section_selector'));
     valid = false;
   }
-
   if (sectionVal === 'danger') {
     // Date
     const dsDate = document.getElementById('ds_date');
     if (!dsDate.value.trim()) { markError(dsDate); valid = false; }
-
     // Time
     const dsTime = document.getElementById('ds_time');
     if (!dsTime.value.trim()) { markError(dsTime); valid = false; }
-
     // Place
     const dsPlace = document.getElementById('ds_place');
     if (!dsPlace.value) { markError(dsPlace); valid = false; }
-
     // Lobby (only if Place = Lobby)
     if (dsPlace.value === 'Lobby') {
       const dsLobby = document.getElementById('ds_lobby');
@@ -868,7 +934,6 @@ function validateForm() {
         }
       }
     }
-
     // Section text (only if Place = Section)
     if (dsPlace.value === 'Section') {
       const dsSection = document.getElementById('ds_section');
@@ -878,7 +943,6 @@ function validateForm() {
       const dsLocoNo = document.getElementById('ds_loco_no');
       if (!dsLocoNo.value.trim()) { markError(dsLocoNo); valid = false; }
     }
-
     // CLI Name
     const dsCliName = document.getElementById('ds_cli_name');
     if (!dsCliName.value) {
@@ -887,7 +951,6 @@ function validateForm() {
       const dsCliNameOtherEl = document.getElementById('ds_cli_name_other');
       if (!dsCliNameOtherEl.value.trim()) { markError(dsCliNameOtherEl); valid = false; }
     }
-
     // Crew Name (autocomplete) — only validate for Section/default mode
     const dsCrewNameEl = document.getElementById('ds_crew_name');
     if (dsPlace.value !== 'Lobby') {
@@ -902,20 +965,16 @@ function validateForm() {
       }
     }
   }
-
   if (sectionVal === 'rs') {
     // Date
     const rsDate = document.getElementById('rs_date');
     if (!rsDate.value.trim()) { markError(rsDate); valid = false; }
-
     // Time
     const rsTime = document.getElementById('rs_time');
     if (!rsTime.value.trim()) { markError(rsTime); valid = false; }
-
     // Signal
     const rsSignal = document.getElementById('rs_signal');
     if (!rsSignal.value.trim()) { markError(rsSignal); valid = false; }
-
     // CLI Name
     const rsCliName = document.getElementById('rs_cli_name');
     if (!rsCliName.value) {
@@ -924,7 +983,6 @@ function validateForm() {
       const rsCliNameOtherEl = document.getElementById('rs_cli_name_other');
       if (!rsCliNameOtherEl.value.trim()) { markError(rsCliNameOtherEl); valid = false; }
     }
-
     // LP Name
     const rsLpNameEl = document.getElementById('rs_lp_name');
     if (!rsLpNameEl.value.trim() || rsLpNameEl.disabled) {
@@ -936,7 +994,6 @@ function validateForm() {
       const rsLpHqEl = document.getElementById('rs_lp_hq');
       if (!rsLpHqEl.value.trim()) { markError(rsLpHqEl); valid = false; }
     }
-
     // ALP Name
     const rsAlpNameEl = document.getElementById('rs_alp_name');
     if (!rsAlpNameEl.value.trim() || rsAlpNameEl.disabled) {
@@ -948,20 +1005,16 @@ function validateForm() {
       const rsAlpHqEl = document.getElementById('rs_alp_hq');
       if (!rsAlpHqEl.value.trim()) { markError(rsAlpHqEl); valid = false; }
     }
-
     // Train No
     const rsTrainNo = document.getElementById('rs_train_no');
     if (!rsTrainNo.value.trim()) { markError(rsTrainNo); valid = false; }
-
     // Loco No
     const rsLocoNo = document.getElementById('rs_loco_no');
     if (!rsLocoNo.value.trim()) { markError(rsLocoNo); valid = false; }
-
     // Section
     const rsSection = document.getElementById('rs_section');
     if (!rsSection.value.trim()) { markError(rsSection); valid = false; }
   }
-
   const banner = document.getElementById('validationErrorBanner');
   if (!valid) {
     banner.style.display = 'block';
@@ -973,30 +1026,20 @@ function validateForm() {
   }
   return valid;
 }
-
 document.getElementById('rbdForm').addEventListener('submit', function(e){
   e.preventDefault();
-
   if (!validateForm()) return;
-
-  submitMessage.style.display = 'none';
+  if (submitState !== 'idle') return;
   submitErrorMessage.style.display = 'none';
-  submittingMessage.style.display = 'block';
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Submitting...';
-
   if (GOOGLE_SHEET_SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
     alert('Google Sheet URL not configured yet. Please set GOOGLE_SHEET_SCRIPT_URL in the script.');
-    submittingMessage.style.display = 'none';
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Submit';
     return;
   }
-
+  showLoader('save');
+  setSubmitState('loading');
   const formData = new FormData(this);
   const baseData = {};
   formData.forEach((value, key) => { baseData[key] = value; });
-
   // Clean OTHERS manual overrides for RS section
   if (baseData['rs_lp_name'] === 'OTHERS' && baseData['rs_lp_name_other']) {
     baseData['rs_lp_name'] = baseData['rs_lp_name_other'].trim();
@@ -1016,23 +1059,19 @@ document.getElementById('rbdForm').addEventListener('submit', function(e){
   delete baseData['rs_alp_name_other'];
   delete baseData['ds_cli_name_other'];
   delete baseData['rs_cli_name_other'];
-
   const sectionVal = document.getElementById('section_selector').value;
   const sectionLabelMap = { danger: 'APPROACHING DANGER COUNSELLING', rs: 'RS PRACTICE' };
   const sheetNameMap  = { danger: 'APPROACHING DANGER COUNSELLING', rs: 'RS PRACTICE' };
   baseData['section_type']     = sectionLabelMap[sectionVal] || sectionVal;
   baseData['section_selector'] = sectionLabelMap[sectionVal] || sectionVal;
   baseData['target_sheet']     = sheetNameMap[sectionVal]    || 'Sheet1';
-
   const now = new Date();
   const pad = n => String(n).padStart(2, '0');
   const submittedAt = pad(now.getDate()) + '/' + pad(now.getMonth()+1) + '/' + now.getFullYear() +
     ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
   baseData['submitted_at'] = submittedAt;
-
   // ---- Build list of payloads to send ----
   const payloads = [];
-
   if (baseData['ds_place'] === 'Lobby') {
     // LOBBY MODE: one sheet row per crew table entry
     const crewRows = getCrewTableRows();
@@ -1053,42 +1092,23 @@ document.getElementById('rbdForm').addEventListener('submit', function(e){
     }
     payloads.push(baseData);
   }
-
   // ---- Send payloads sequentially ----
   const formEl = this;
   let idx = 0;
-
   function sendNext() {
     if (idx >= payloads.length) {
-      // All done
-      submittingMessage.style.display = 'none';
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit';
-      const msg = document.getElementById('submitMessage');
-      msg.textContent = payloads.length > 1
-        ? 'DATA SUBMITTED SUCCESSFULLY (' + payloads.length + ' ROWS)'
-        : 'DATA SUBMITTED SUCCESSFULLY';
-      msg.style.display = 'block';
-      formEl.reset();
+      // All done -> show DATA SAVED, button turns to SUBMITTED
+      setSubmitState('submitted');
+      showSaved(payloads.length > 1 ? ('DATA SAVED (' + payloads.length + ' ROWS)') : 'DATA SAVED');
       clearErrors();
       document.getElementById('validationErrorBanner').style.display = 'none';
       document.getElementById('validationErrorBanner').textContent = '⚠️ PLEASE FILL ALL MANDATORY DETAILS BEFORE SUBMITTING';
-      dsCrewNameOtherGroup.style.display = 'none';
-      rsLpNameOtherGroup.style.display = 'none';
-      rsAlpNameOtherGroup.style.display = 'none';
-      document.getElementById('ds_crew_tbody').innerHTML = '';
-      crewRowCounter = 0;
-      updateSections();
-      updateDsPlace();
-      setTimeout(() => { msg.style.display = 'none'; }, 5000);
       return;
     }
-
     // Update progress indicator
-    submittingMessage.textContent = payloads.length > 1
-      ? 'SUBMITTING ' + (idx+1) + ' OF ' + payloads.length + '... PLEASE WAIT'
-      : 'SUBMITTING... PLEASE WAIT';
-
+    if (payloads.length > 1) {
+      document.getElementById('loaderTitle').textContent = '⏳ PLEASE WAIT — SAVING ' + (idx+1) + ' OF ' + payloads.length + '...';
+    }
     fetch(GOOGLE_SHEET_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
@@ -1101,18 +1121,15 @@ document.getElementById('rbdForm').addEventListener('submit', function(e){
     })
     .catch(function(err) {
       console.error(err);
-      submittingMessage.style.display = 'none';
+      hideLoader();
+      setSubmitState('idle');
       submitErrorMessage.style.display = 'block';
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit';
       setTimeout(() => { submitErrorMessage.style.display = 'none'; }, 5000);
       alert('Error submitting row ' + (idx+1) + '. Please check your internet connection or script URL.');
     });
   }
-
   sendNext();
 });
-
 // ===== CREW DATA: fetched live from Google Sheet (RAIPUR DIVISION CREW) =====
 // IMPORTANT: The sheet must be shared as "Anyone with the link - Viewer"
 // (Google Sheet > Share) or this will fail to load.
@@ -1121,26 +1138,21 @@ document.getElementById('rbdForm').addEventListener('submit', function(e){
 // external domain gets blocked by the browser's CORS policy.
 const CREW_SHEET_ID = '1p-anwng3nFUpeqrOcUlQ5Kv-5B2hyvjyVswgdlOGhlo';
 const CREW_SHEET_GID = '0'; // change if crew list lives on a different tab
-
 let CREW_DATA = [];
 let crewLoadTimeoutId = null;
-
 function normalizeHeader(h) {
   return (h || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
 }
-
 function setNameInputState(inputEl, placeholderText, disabled) {
   inputEl.placeholder = placeholderText;
   inputEl.disabled = !!disabled;
   if (disabled) inputEl.value = '';
 }
-
 function enableNameInputs() {
   setNameInputState(dsCrewName, 'Type to search crew name...', false);
   setNameInputState(rsLpName, 'Type to search LP name...', false);
   setNameInputState(rsAlpName, 'Type to search ALP name...', false);
 }
-
 function showCrewLoadError(reason) {
   console.error('Failed to load LP/ALP/Crew names from Google Sheet:', reason);
   const msg = 'Could not load (' + (reason || 'check sheet sharing') + ')';
@@ -1148,7 +1160,6 @@ function showCrewLoadError(reason) {
   setNameInputState(rsLpName, msg, true);
   setNameInputState(rsAlpName, msg, true);
 }
-
 // Called automatically by the JSONP response from Google
 function handleCrewSheetResponse(response) {
   clearTimeout(crewLoadTimeoutId);
@@ -1158,24 +1169,20 @@ function handleCrewSheetResponse(response) {
         (response.errors[0].detailed_message || response.errors[0].message);
       throw new Error(detail || 'Google Sheets returned an error');
     }
-
     const table = response.table;
     const headers = table.cols.map(c => normalizeHeader(c.label));
     const nameIdx = headers.findIndex(h => ['name', 'crewname', 'lpalpname', 'employeename'].includes(h));
     const desigIdx = headers.findIndex(h => ['designation', 'desig', 'category'].includes(h));
     const hqIdx = headers.findIndex(h => ['hq', 'headquarter', 'headquarters'].includes(h));
     const cmsIdx = headers.findIndex(h => ['cms', 'cmsid', 'crewcmsid'].includes(h));
-
     if (nameIdx === -1) {
       throw new Error('no "Name" column found - sheet headers were: ' + table.cols.map(c => c.label).join(', '));
     }
-
     const getCell = (cells, idx) => {
       if (idx < 0) return '';
       const cell = cells[idx];
       return (cell && cell.v != null) ? String(cell.v).trim() : '';
     };
-
     CREW_DATA = table.rows
       .map(row => {
         const cells = row.c || [];
@@ -1187,36 +1194,30 @@ function handleCrewSheetResponse(response) {
         };
       })
       .filter(c => c.name);
-
     enableNameInputs();
     enableCrewTableInputs();
   } catch (err) {
     showCrewLoadError(err.message);
   }
 }
-
 function loadCrewData() {
   setNameInputState(dsCrewName, 'Loading crew list...', true);
   setNameInputState(rsLpName, 'Loading LP list...', true);
   setNameInputState(rsAlpName, 'Loading ALP list...', true);
-
   const src = 'https://docs.google.com/spreadsheets/d/' + CREW_SHEET_ID +
     '/gviz/tq?gid=' + CREW_SHEET_GID +
     '&headers=1&tqx=out:json;responseHandler:handleCrewSheetResponse';
-
   const script = document.createElement('script');
   script.src = src;
   script.onerror = function () {
     showCrewLoadError('could not reach the sheet - is it shared "Anyone with the link"?');
   };
   document.body.appendChild(script);
-
   // Safety net in case the script loads but never calls our handler
   crewLoadTimeoutId = setTimeout(function () {
     showCrewLoadError('timed out - check sheet sharing settings');
   }, 10000);
 }
-
 function getAllCrewNames() {
   const seen = new Set();
   const names = [];
@@ -1225,7 +1226,6 @@ function getAllCrewNames() {
   });
   return names;
 }
-
 function getAllCrewCms() {
   const seen = new Set();
   const list = [];
@@ -1234,7 +1234,6 @@ function getAllCrewCms() {
   });
   return list;
 }
-
 function autoFillFromCrew(name, designationField, hqField, cmsField) {
   const crew = CREW_DATA.find(c => c.name === name);
   if (crew) {
@@ -1247,7 +1246,6 @@ function autoFillFromCrew(name, designationField, hqField, cmsField) {
     cmsField.value = '';
   }
 }
-
 function autoFillHqCms(name, hqField, cmsField) {
   const crew = CREW_DATA.find(c => c.name === name);
   if (crew) {
@@ -1258,22 +1256,18 @@ function autoFillHqCms(name, hqField, cmsField) {
     cmsField.value = '';
   }
 }
-
 // ===== AUTOCOMPLETE WIDGET (type-to-search behavior for name fields) =====
 function setupAutocomplete(inputEl, listEl, getOptions, onSelect) {
   let activeIndex = -1;
-
   function closeList() {
     listEl.innerHTML = '';
     listEl.style.display = 'none';
     activeIndex = -1;
   }
-
   function setActive(items) {
     items.forEach((it, i) => it.classList.toggle('active', i === activeIndex));
     if (activeIndex > -1) items[activeIndex].scrollIntoView({ block: 'nearest' });
   }
-
   function renderMatches(matches) {
     listEl.innerHTML = '';
     activeIndex = -1;
@@ -1299,7 +1293,6 @@ function setupAutocomplete(inputEl, listEl, getOptions, onSelect) {
     });
     listEl.style.display = 'block';
   }
-
   function showMatches() {
     if (inputEl.disabled) return;
     const q = inputEl.value.trim().toLowerCase();
@@ -1309,10 +1302,8 @@ function setupAutocomplete(inputEl, listEl, getOptions, onSelect) {
     if (!matches.includes('OTHERS')) matches.push('OTHERS'); // always offer manual entry alongside matches
     renderMatches(matches);
   }
-
   inputEl.addEventListener('input', showMatches);
   inputEl.addEventListener('focus', showMatches);
-
   inputEl.addEventListener('keydown', function (e) {
     const items = listEl.querySelectorAll('.autocomplete-item');
     if (!items.length) return;
@@ -1336,34 +1327,28 @@ function setupAutocomplete(inputEl, listEl, getOptions, onSelect) {
       closeList();
     }
   });
-
   inputEl.addEventListener('blur', function () {
     setTimeout(closeList, 150); // delay so a click on an item registers first
   });
 }
-
 // ===== CMS ID -> NAME REVERSE LOOKUP (type CMS ID, pick name from list) =====
 function setupCmsAutocomplete(cmsInputEl, listEl, nameInputEl, onNamePicked) {
   let activeIndex = -1;
-
   function closeList() {
     listEl.innerHTML = '';
     listEl.style.display = 'none';
     activeIndex = -1;
   }
-
   function setActive(items) {
     items.forEach((it, i) => it.classList.toggle('active', i === activeIndex));
     if (activeIndex > -1) items[activeIndex].scrollIntoView({ block: 'nearest' });
   }
-
   function pick(crew) {
     cmsInputEl.value = crew.cms;
     nameInputEl.value = crew.name;
     closeList();
     onNamePicked(crew.name);
   }
-
   function renderMatches(matches) {
     listEl.innerHTML = '';
     activeIndex = -1;
@@ -1380,17 +1365,14 @@ function setupCmsAutocomplete(cmsInputEl, listEl, nameInputEl, onNamePicked) {
     });
     listEl.style.display = 'block';
   }
-
   function showMatches() {
     const q = cmsInputEl.value.trim().toLowerCase();
     if (!q) { closeList(); return; }
     const matches = getAllCrewCms().filter(c => c.cms.toLowerCase().includes(q)).slice(0, 50);
     renderMatches(matches);
   }
-
   cmsInputEl.addEventListener('input', showMatches);
   cmsInputEl.addEventListener('focus', showMatches);
-
   cmsInputEl.addEventListener('keydown', function (e) {
     const items = listEl.querySelectorAll('.autocomplete-item');
     if (!items.length) return;
@@ -1412,12 +1394,10 @@ function setupCmsAutocomplete(cmsInputEl, listEl, nameInputEl, onNamePicked) {
       closeList();
     }
   });
-
   cmsInputEl.addEventListener('blur', function () {
     setTimeout(closeList, 150);
   });
 }
-
 // ----- Link calendar date-picker icon to the DD/MM/YYYY text box -----
 function setupDatePicker(textInput, pickerInput) {
   pickerInput.addEventListener('change', function () {
@@ -1428,7 +1408,6 @@ function setupDatePicker(textInput, pickerInput) {
 }
 setupDatePicker(document.getElementById('ds_date'), document.getElementById('ds_date_picker'));
 setupDatePicker(document.getElementById('rs_date'), document.getElementById('rs_date_picker'));
-
 // ----- Auto-format date text inputs as DD/MM/YYYY while typing -----
 function setupDateAutoFormat(inputEl) {
   inputEl.addEventListener('input', function () {
@@ -1444,7 +1423,6 @@ function setupDateAutoFormat(inputEl) {
 }
 setupDateAutoFormat(document.getElementById('ds_date'));
 setupDateAutoFormat(document.getElementById('rs_date'));
-
 // ----- Auto-format time text inputs as HH:MM while typing -----
 function setupTimeAutoFormat(inputEl) {
   inputEl.addEventListener('input', function () {
@@ -1458,7 +1436,6 @@ function setupTimeAutoFormat(inputEl) {
 }
 setupTimeAutoFormat(document.getElementById('ds_time'));
 setupTimeAutoFormat(document.getElementById('rs_time'));
-
 // ----- "OTHERS" manual-entry toggle for name autocomplete fields -----
 function toggleOtherNameInput(name, groupEl, otherInputEl) {
   if (name === 'OTHERS') {
@@ -1469,7 +1446,6 @@ function toggleOtherNameInput(name, groupEl, otherInputEl) {
     otherInputEl.value = '';
   }
 }
-
 function setFieldsEditable(fields, editable) {
   fields.forEach(function(f) {
     if (editable) {
@@ -1485,7 +1461,6 @@ function setFieldsEditable(fields, editable) {
     }
   });
 }
-
 // ----- CLI Name "OTHERS" manual-entry toggle (both sections) -----
 const dsCliNameEl = document.getElementById('ds_cli_name');
 const dsCliNameOtherGroup = document.getElementById('ds_cli_name_other_group');
@@ -1493,14 +1468,12 @@ const dsCliNameOther = document.getElementById('ds_cli_name_other');
 dsCliNameEl.addEventListener('change', function () {
   toggleOtherNameInput(this.value, dsCliNameOtherGroup, dsCliNameOther);
 });
-
 const rsCliNameEl = document.getElementById('rs_cli_name');
 const rsCliNameOtherGroup = document.getElementById('rs_cli_name_other_group');
 const rsCliNameOther = document.getElementById('rs_cli_name_other');
 rsCliNameEl.addEventListener('change', function () {
   toggleOtherNameInput(this.value, rsCliNameOtherGroup, rsCliNameOther);
 });
-
 // ----- Danger Section -----
 const dsCrewName = document.getElementById('ds_crew_name');
 const dsCrewNameList = document.getElementById('ds_crew_name_list');
@@ -1509,7 +1482,6 @@ const dsCrewNameOther = document.getElementById('ds_crew_name_other');
 const dsDesignation = document.getElementById('ds_designation');
 const dsCrewCms = document.getElementById('ds_crew_cms');
 const dsHq = document.getElementById('ds_hq');
-
 setupAutocomplete(dsCrewName, dsCrewNameList, getAllCrewNames, function (name) {
   toggleOtherNameInput(name, dsCrewNameOtherGroup, dsCrewNameOther);
   if (name === 'OTHERS') {
@@ -1519,13 +1491,11 @@ setupAutocomplete(dsCrewName, dsCrewNameList, getAllCrewNames, function (name) {
     autoFillFromCrew(name, dsDesignation, dsHq, dsCrewCms);
   }
 });
-
 setupCmsAutocomplete(dsCrewCms, document.getElementById('ds_crew_cms_list'), dsCrewName, function (name) {
   toggleOtherNameInput(name, dsCrewNameOtherGroup, dsCrewNameOther);
   setFieldsEditable([dsDesignation, dsHq], false);
   autoFillFromCrew(name, dsDesignation, dsHq, dsCrewCms);
 });
-
 // ----- RS Section -----
 const rsLpName = document.getElementById('rs_lp_name');
 const rsLpNameList = document.getElementById('rs_lp_name_list');
@@ -1539,7 +1509,6 @@ const rsLpHq = document.getElementById('rs_lp_hq');
 const rsLpCms = document.getElementById('rs_lp_cms');
 const rsAlpHq = document.getElementById('rs_alp_hq');
 const rsAlpCms = document.getElementById('rs_alp_cms');
-
 setupAutocomplete(rsLpName, rsLpNameList, getAllCrewNames, function (name) {
   toggleOtherNameInput(name, rsLpNameOtherGroup, rsLpNameOther);
   if (name === 'OTHERS') {
@@ -1549,7 +1518,6 @@ setupAutocomplete(rsLpName, rsLpNameList, getAllCrewNames, function (name) {
     autoFillHqCms(name, rsLpHq, rsLpCms);
   }
 });
-
 setupCmsAutocomplete(rsLpCms, document.getElementById('rs_lp_cms_list'), rsLpName, function (name) {
   toggleOtherNameInput(name, rsLpNameOtherGroup, rsLpNameOther);
   setFieldsEditable([rsLpHq], false);
@@ -1564,29 +1532,24 @@ setupAutocomplete(rsAlpName, rsAlpNameList, getAllCrewNames, function (name) {
     autoFillHqCms(name, rsAlpHq, rsAlpCms);
   }
 });
-
 setupCmsAutocomplete(rsAlpCms, document.getElementById('rs_alp_cms_list'), rsAlpName, function (name) {
   toggleOtherNameInput(name, rsAlpNameOtherGroup, rsAlpNameOther);
   setFieldsEditable([rsAlpHq], false);
   autoFillHqCms(name, rsAlpHq, rsAlpCms);
 });
-
 // ===== LOBBY CREW TABLE: multi-row add/delete with autocomplete =====
 let crewRowCounter = 0;
-
 function addCrewRow() {
   const tbody = document.getElementById('ds_crew_tbody');
   crewRowCounter++;
   const idx = crewRowCounter;
   const tr = document.createElement('tr');
   tr.dataset.rowIdx = idx;
-
   // S.No
   const tdSno = document.createElement('td');
   tdSno.className = 'sno-cell';
   tdSno.textContent = tbody.rows.length + 1;
   tr.appendChild(tdSno);
-
   // Crew Name (autocomplete)
   const tdName = document.createElement('td');
   tdName.className = 'crew-name-cell';
@@ -1600,7 +1563,6 @@ function addCrewRow() {
   tdName.appendChild(nameInput);
   tdName.appendChild(acList);
   tr.appendChild(tdName);
-
   // Designation
   const tdDesig = document.createElement('td');
   const desigInput = document.createElement('input');
@@ -1610,7 +1572,6 @@ function addCrewRow() {
   desigInput.readOnly = true;
   tdDesig.appendChild(desigInput);
   tr.appendChild(tdDesig);
-
   // HQ
   const tdHq = document.createElement('td');
   const hqInput = document.createElement('input');
@@ -1620,7 +1581,6 @@ function addCrewRow() {
   hqInput.readOnly = true;
   tdHq.appendChild(hqInput);
   tr.appendChild(tdHq);
-
   // CMS ID
   const tdCms = document.createElement('td');
   tdCms.className = 'crew-name-cell';
@@ -1634,7 +1594,6 @@ function addCrewRow() {
   tdCms.appendChild(cmsInput);
   tdCms.appendChild(cmsAcList);
   tr.appendChild(tdCms);
-
   // Delete button
   const tdDel = document.createElement('td');
   const delBtn = document.createElement('button');
@@ -1648,9 +1607,7 @@ function addCrewRow() {
   });
   tdDel.appendChild(delBtn);
   tr.appendChild(tdDel);
-
   tbody.appendChild(tr);
-
   // Setup autocomplete for this row's name input
   setupAutocomplete(nameInput, acList, getAllCrewNames, function(name) {
     if (name === 'OTHERS') {
@@ -1684,7 +1641,6 @@ function addCrewRow() {
       }
     }
   });
-
   // Reverse lookup: type CMS ID in this row to pick a matching crew name
   setupCmsAutocomplete(cmsInput, cmsAcList, nameInput, function(name) {
     desigInput.readOnly = true;
@@ -1700,17 +1656,14 @@ function addCrewRow() {
       hqInput.value = crew.hq;
     }
   });
-
   return tr;
 }
-
 function renumberCrewRows() {
   const rows = document.getElementById('ds_crew_tbody').rows;
   for (let i = 0; i < rows.length; i++) {
     rows[i].cells[0].textContent = i + 1;
   }
 }
-
 function enableCrewTableInputs() {
   const inputs = document.querySelectorAll('#ds_crew_tbody input[type=text]:not(.crew-auto-field)');
   inputs.forEach(inp => {
@@ -1723,11 +1676,9 @@ function enableCrewTableInputs() {
     if (!inp.value) inp.placeholder = 'Auto or type CMS ID...';
   });
 }
-
 document.getElementById('btn_add_crew_row').addEventListener('click', function() {
   addCrewRow();
 });
-
 function getCrewTableRows() {
   const rows = document.getElementById('ds_crew_tbody').rows;
   const result = [];
@@ -1741,6 +1692,334 @@ function getCrewTableRows() {
   }
   return result;
 }
+
+// =====================================================================
+// ===== LOADER / SUBMIT STATE / DRAFT / PDF / RESET (bottom nav) =====
+// =====================================================================
+let submitState = 'idle';   // idle | loading | submitted
+let loaderTimer = null;
+const loaderOverlay = document.getElementById('loaderOverlay');
+const loaderRing = document.getElementById('loaderRing');
+const loaderIcon = document.getElementById('loaderIcon');
+const loaderTitle = document.getElementById('loaderTitle');
+const loaderSub = document.getElementById('loaderSub');
+
+function showLoader(kind) {
+  clearTimeout(loaderTimer);
+  loaderRing.classList.remove('done');
+  loaderIcon.textContent = '✋';
+  loaderTitle.textContent = kind === 'pdf' ? '⏳ PLEASE WAIT — GENERATING PDF...' : '⏳ PLEASE WAIT — DATA SAVING...';
+  loaderSub.textContent = 'Do not close or refresh this page';
+  loaderOverlay.classList.add('show');
+  loaderOverlay.onclick = null;
+}
+function hideLoader() {
+  clearTimeout(loaderTimer);
+  loaderOverlay.classList.remove('show');
+}
+function showSaved(msg) {
+  loaderRing.classList.add('done');
+  loaderIcon.textContent = '✅';
+  loaderTitle.textContent = '✅ ' + msg;
+  loaderSub.textContent = 'Your data has been saved successfully';
+  loaderOverlay.classList.add('show');
+  loaderOverlay.onclick = hideLoader;
+  loaderTimer = setTimeout(hideLoader, 3000);
+}
+function setSubmitState(s) {
+  submitState = s;
+  const ico = submitBtn.querySelector('.nav-ico');
+  const lab = submitBtn.querySelector('.nav-lab');
+  submitBtn.classList.remove('is-loading', 'is-submitted');
+  if (s === 'loading') {
+    submitBtn.disabled = true; ico.textContent = '⏳'; lab.textContent = 'Saving...';
+    submitBtn.classList.add('is-loading');
+  } else if (s === 'submitted') {
+    submitBtn.disabled = true; ico.textContent = '✔'; lab.textContent = 'SUBMITTED';
+    submitBtn.classList.add('is-submitted');
+  } else {
+    submitBtn.disabled = false; ico.textContent = '✅'; lab.textContent = 'Submit';
+  }
+}
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2500);
+}
+
+// ----- Submit button (bottom nav) -----
+const rbdForm = document.getElementById('rbdForm');
+submitBtn.addEventListener('click', function () {
+  if (submitState !== 'idle') return;
+  if (rbdForm.requestSubmit) rbdForm.requestSubmit();
+  else rbdForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+});
+
+// ----- Textareas: always fully visible -----
+function autoGrow(t) {
+  if (!t.offsetParent || !window.matchMedia('(max-width: 768px)').matches) return;
+  t.style.height = 'auto';
+  t.style.height = (t.scrollHeight + 2) + 'px';
+}
+function autoGrowAll() { document.querySelectorAll('textarea').forEach(autoGrow); }
+document.querySelectorAll('textarea').forEach(function (t) {
+  t.addEventListener('input', function () { autoGrow(t); });
+  t.addEventListener('focus', function () {
+    setTimeout(function () { t.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 350);
+  });
+});
+selector.addEventListener('change', function () { setTimeout(autoGrowAll, 0); });
+
+// ----- Reset -----
+function resetFormAll() {
+  rbdForm.reset();
+  clearErrors();
+  document.getElementById('validationErrorBanner').style.display = 'none';
+  document.getElementById('validationErrorBanner').textContent = '⚠️ PLEASE FILL ALL MANDATORY DETAILS BEFORE SUBMITTING';
+  submitErrorMessage.style.display = 'none';
+  dsCliNameOtherGroup.style.display = 'none';
+  rsCliNameOtherGroup.style.display = 'none';
+  dsCrewNameOtherGroup.style.display = 'none';
+  rsLpNameOtherGroup.style.display = 'none';
+  rsAlpNameOtherGroup.style.display = 'none';
+  setFieldsEditable([dsDesignation, dsHq], false);
+  setFieldsEditable([rsLpHq], false);
+  setFieldsEditable([rsAlpHq], false);
+  document.getElementById('ds_crew_tbody').innerHTML = '';
+  crewRowCounter = 0;
+  updateSections();
+  updateDsPlace();
+  document.querySelectorAll('textarea').forEach(function (t) { t.style.height = ''; });
+  setSubmitState('idle');
+}
+document.getElementById('btnReset').addEventListener('click', function () {
+  if (confirm('Clear the whole form?')) { resetFormAll(); showToast('Form reset'); }
+});
+
+// ----- Draft: save / upload -----
+const DRAFT_KEY = 'rbd_counselling_draft_v1';
+function collectDraft() {
+  const fields = {};
+  rbdForm.querySelectorAll('input[id], select[id], textarea[id]').forEach(function (el) {
+    if (el.type === 'file' || /_picker$/.test(el.id)) return;
+    fields[el.id] = el.value;
+  });
+  const crew = [];
+  const rows = document.getElementById('ds_crew_tbody').rows;
+  for (let i = 0; i < rows.length; i++) {
+    const c = rows[i].cells;
+    crew.push({
+      name: c[1].querySelector('input[type=text]').value,
+      desig: c[2].querySelector('input').value,
+      hq: c[3].querySelector('input').value,
+      cms: c[4].querySelector('input').value
+    });
+  }
+  return { v: 1, saved_at: new Date().toISOString(), fields: fields, crew: crew };
+}
+function unlockField(f) { f.removeAttribute('readonly'); f.readOnly = false; f.style.backgroundColor = '#fff'; }
+function applyDraft(d) {
+  if (!d || !d.fields) throw new Error('Not a valid draft file');
+  resetFormAll();
+  Object.keys(d.fields).forEach(function (id) {
+    const el = document.getElementById(id);
+    if (el) el.value = d.fields[id];
+  });
+  // crew table rows (Lobby)
+  document.getElementById('ds_crew_tbody').innerHTML = '';
+  crewRowCounter = 0;
+  (d.crew || []).forEach(function (r) {
+    const tr = addCrewRow();
+    const c = tr.cells;
+    c[1].querySelector('input[type=text]').value = r.name || '';
+    c[2].querySelector('input').value = r.desig || '';
+    c[3].querySelector('input').value = r.hq || '';
+    c[4].querySelector('input').value = r.cms || '';
+    if ((r.name || '').trim() === 'OTHERS') {
+      [c[2].querySelector('input'), c[3].querySelector('input')].forEach(function (f) {
+        f.readOnly = false; f.classList.add('editable');
+      });
+    }
+  });
+  // "OTHERS" manual groups + editable HQ/designation
+  dsCliNameOtherGroup.style.display = dsCliNameEl.value === 'OTHERS' ? 'flex' : 'none';
+  rsCliNameOtherGroup.style.display = rsCliNameEl.value === 'OTHERS' ? 'flex' : 'none';
+  if (dsCrewName.value.trim() === 'OTHERS') { dsCrewNameOtherGroup.style.display = 'flex'; unlockField(dsDesignation); unlockField(dsHq); }
+  if (rsLpName.value.trim() === 'OTHERS') { rsLpNameOtherGroup.style.display = 'flex'; unlockField(rsLpHq); }
+  if (rsAlpName.value.trim() === 'OTHERS') { rsAlpNameOtherGroup.style.display = 'flex'; unlockField(rsAlpHq); }
+  updateSections();
+  updateDsPlace();
+  setTimeout(autoGrowAll, 0);
+}
+document.getElementById('btnSaveDraft')?.addEventListener('click', function () {
+  const draft = collectDraft();
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch (e) {}
+  try {
+    const blob = new Blob([JSON.stringify(draft, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'RBD_Draft_' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+  } catch (e) {}
+  showToast('Draft saved');
+});
+document.getElementById('btnUploadDraft')?.addEventListener('click', function () {
+  document.getElementById('draftFile').click();
+});
+document.getElementById('draftFile')?.addEventListener('change', function () {
+  const file = this.files && this.files[0];
+  const input = this;
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function () {
+    try { applyDraft(JSON.parse(reader.result)); showToast('Draft loaded'); }
+    catch (e) { alert('Could not load draft: ' + e.message); }
+    input.value = '';
+  };
+  reader.readAsText(file);
+});
+
+// ----- Generate PDF -----
+let pdfBlob = null, pdfName = 'RBD_Report.pdf';
+const pdfOverlay = document.getElementById('pdfOverlay');
+function fv(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function fvName(id) { const v = fv(id); return v === 'OTHERS' ? (fv(id + '_other') || 'OTHERS') : v; }
+function buildReportRows(sectionVal) {
+  const rows = [];
+  const add = (k, v) => rows.push([k, v || '-']);
+  if (sectionVal === 'danger') {
+    add('Date', fv('ds_date'));
+    add('Time', fv('ds_time'));
+    add('Place', fv('ds_place'));
+    if (fv('ds_place') === 'Lobby') add('Lobby', fv('ds_lobby'));
+    add('CLI Name', fvName('ds_cli_name'));
+    if (fv('ds_place') !== 'Lobby') {
+      add('Crew Name', fvName('ds_crew_name'));
+      add('Designation', fv('ds_designation'));
+      add('Crew CMS ID', fv('ds_crew_cms'));
+      add('HQ', fv('ds_hq'));
+      if (fv('ds_place') === 'Section') {
+        add('Section', fv('ds_section'));
+        add('Train No', fv('ds_train_no'));
+        add('Loco No', fv('ds_loco_no'));
+      }
+    }
+    add('Remarks', fv('ds_remarks'));
+  } else {
+    add('Date', fv('rs_date'));
+    add('Time', fv('rs_time'));
+    add('Signal Name/No', fv('rs_signal'));
+    add('CLI Name', fvName('rs_cli_name'));
+    add('LP Name', fvName('rs_lp_name'));
+    add('LP HQ', fv('rs_lp_hq'));
+    add('LP CMS ID', fv('rs_lp_cms'));
+    add('ALP Name', fvName('rs_alp_name'));
+    add('ALP HQ', fv('rs_alp_hq'));
+    add('ALP CMS ID', fv('rs_alp_cms'));
+    add('Train No', fv('rs_train_no'));
+    add('Loco No', fv('rs_loco_no'));
+    add('Section', fv('rs_section'));
+    add('Remarks', fv('rs_remarks'));
+  }
+  return rows;
+}
+function buildPdf() {
+  const sectionVal = fv('section_selector');
+  const label = sectionVal === 'danger' ? 'APPROACHING DANGER SIGNAL COUNSELLING' : 'RS APPLICATION PRACTICE';
+  const jsPDF = window.jspdf.jsPDF;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const W = doc.internal.pageSize.getWidth();
+  doc.setFillColor(0, 51, 102);
+  doc.rect(0, 0, W, 30, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(17);
+  doc.text('RAILWAY BOARD DRIVE', W / 2, 11, { align: 'center' });
+  doc.setFontSize(10.5);
+  doc.setTextColor(255, 215, 0);
+  doc.text(label, W / 2, 18, { align: 'center' });
+  doc.text('RAIPUR DIVISION', W / 2, 24, { align: 'center' });
+  let y = 38;
+  doc.autoTable({
+    startY: y,
+    head: [['Field', 'Details']],
+    body: buildReportRows(sectionVal),
+    theme: 'grid',
+    styles: { fontSize: 10.5, cellPadding: 2.8, overflow: 'linebreak', textColor: [20, 20, 20] },
+    headStyles: { fillColor: [0, 51, 102], textColor: 255 },
+    columnStyles: { 0: { cellWidth: 48, fontStyle: 'bold', fillColor: [230, 238, 245] } },
+    margin: { left: 12, right: 12 }
+  });
+  if (sectionVal === 'danger' && fv('ds_place') === 'Lobby') {
+    const crew = getCrewTableRows();
+    y = doc.lastAutoTable.finalY + 8;
+    doc.setTextColor(0, 51, 102);
+    doc.setFontSize(11);
+    doc.text('CREW LIST (LOBBY COUNSELLING)', 12, y);
+    doc.autoTable({
+      startY: y + 3,
+      head: [['S.NO', 'CREW NAME', 'DESIGNATION', 'HQ', 'CMS ID']],
+      body: crew.map(c => [c.sno, c.crew_name, c.designation || '-', c.hq || '-', c.cms_id || '-']),
+      theme: 'grid',
+      styles: { fontSize: 10, cellPadding: 2.5 },
+      headStyles: { fillColor: [0, 51, 102], textColor: 255 },
+      margin: { left: 12, right: 12 }
+    });
+  }
+  const now = new Date();
+  const p = n => String(n).padStart(2, '0');
+  const stamp = p(now.getDate()) + '/' + p(now.getMonth() + 1) + '/' + now.getFullYear() + ' ' + p(now.getHours()) + ':' + p(now.getMinutes());
+  y = doc.lastAutoTable.finalY + 8;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(90, 90, 90);
+  doc.text('Generated on ' + stamp, 12, y);
+  const dateTxt = (sectionVal === 'danger' ? fv('ds_date') : fv('rs_date')).replace(/\//g, '-') || 'report';
+  pdfName = 'RBD_' + (sectionVal === 'danger' ? 'DANGER_COUNSELLING' : 'RS_PRACTICE') + '_' + dateTxt + '.pdf';
+  return doc.output('blob');
+}
+document.getElementById('btnGeneratePdf')?.addEventListener('click', function () {
+  if (!validateForm()) return;
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert('PDF library could not load. Please check your internet connection and reload the page.');
+    return;
+  }
+  showLoader('pdf');
+  setTimeout(function () {
+    try {
+      pdfBlob = buildPdf();
+      hideLoader();
+      document.getElementById('pdfFileName').textContent = pdfName;
+      pdfOverlay.classList.add('show');
+    } catch (e) {
+      console.error(e);
+      hideLoader();
+      alert('PDF generation failed: ' + e.message);
+    }
+  }, 500);
+});
+function downloadPdf() {
+  if (!pdfBlob) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(pdfBlob);
+  a.download = pdfName;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+}
+document.getElementById('pdfDownloadBtn').addEventListener('click', downloadPdf);
+document.getElementById('pdfShareBtn').addEventListener('click', async function () {
+  if (!pdfBlob) return;
+  const file = new File([pdfBlob], pdfName, { type: 'application/pdf' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: 'Railway Board Drive Report' }); } catch (e) {}
+  } else {
+    downloadPdf();
+  }
+});
+document.getElementById('pdfCloseBtn').addEventListener('click', function () { pdfOverlay.classList.remove('show'); });
 
 // Fetch LP / ALP / Crew names live from the Google Sheet
 loadCrewData();
