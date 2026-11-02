@@ -1283,6 +1283,7 @@ function setupAutocomplete(inputEl, listEl, getOptions, onSelect) {
         const crew = CREW_DATA.find(c => c.name === name);
         item.textContent = (crew && crew.cms) ? (name + ' ' + crew.cms) : name;
       }
+      item.dataset.name = name;
       item.addEventListener('mousedown', function (e) {
         e.preventDefault(); // keep focus so blur doesn't close list before click registers
         inputEl.value = name;
@@ -1295,6 +1296,7 @@ function setupAutocomplete(inputEl, listEl, getOptions, onSelect) {
   }
   function showMatches() {
     if (inputEl.disabled) return;
+    if (inputEl.dataset.manual === '1') return; // manual-entry mode (OTHERS): plain typing, no dropdown
     const q = inputEl.value.trim().toLowerCase();
     onSelect(inputEl.value.trim()); // live exact-match autofill as they type/paste
     if (!q) { closeList(); return; }
@@ -1318,7 +1320,7 @@ function setupAutocomplete(inputEl, listEl, getOptions, onSelect) {
     } else if (e.key === 'Enter') {
       if (activeIndex > -1) {
         e.preventDefault();
-        const name = items[activeIndex].textContent;
+        const name = items[activeIndex].dataset.name || items[activeIndex].textContent;
         inputEl.value = name;
         closeList();
         onSelect(name);
@@ -1611,6 +1613,11 @@ function addCrewRow() {
   // Setup autocomplete for this row's name input
   setupAutocomplete(nameInput, acList, getAllCrewNames, function(name) {
     if (name === 'OTHERS') {
+      // Switch crew name to manual typing (no dropdown, field cleared)
+      nameInput.dataset.manual = '1';
+      nameInput.value = '';
+      nameInput.placeholder = 'Type crew name manually';
+      setTimeout(function () { nameInput.focus(); }, 0);
       desigInput.readOnly = false;
       hqInput.readOnly = false;
       desigInput.classList.add('editable');
@@ -1622,6 +1629,7 @@ function addCrewRow() {
       hqInput.placeholder = 'Enter manually';
       cmsInput.placeholder = 'Enter manually or search CMS ID';
     } else {
+      nameInput.dataset.manual = '';
       desigInput.readOnly = true;
       hqInput.readOnly = true;
       desigInput.classList.remove('editable');
@@ -1641,8 +1649,20 @@ function addCrewRow() {
       }
     }
   });
+  // Manual mode left empty -> go back to search mode
+  nameInput.addEventListener('blur', function () {
+    if (nameInput.dataset.manual === '1' && !nameInput.value.trim()) {
+      nameInput.dataset.manual = '';
+      nameInput.placeholder = 'Type to search...';
+      desigInput.readOnly = true; hqInput.readOnly = true;
+      desigInput.classList.remove('editable'); hqInput.classList.remove('editable');
+      desigInput.placeholder = 'Auto'; hqInput.placeholder = 'Auto';
+      cmsInput.placeholder = 'Auto or type CMS ID...';
+    }
+  });
   // Reverse lookup: type CMS ID in this row to pick a matching crew name
   setupCmsAutocomplete(cmsInput, cmsAcList, nameInput, function(name) {
+    nameInput.dataset.manual = '';
     desigInput.readOnly = true;
     hqInput.readOnly = true;
     desigInput.classList.remove('editable');
